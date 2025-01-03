@@ -49,7 +49,7 @@ INT wmain(INT argc, WCHAR** argv)
             U_Msg("[!] Could't wipe %s", "Rich header");
         }
 
-        if (!PE_WipeFileHeader(pView, HeaderType))
+        if (!PE_WipeCOFFHeader(pView, HeaderType))
         {
             U_Msg("[!] Could't wipe %s", "File header");
         }

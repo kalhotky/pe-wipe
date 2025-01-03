@@ -1,5 +1,5 @@
 # PE Wipe
-PE Wipe is a tool for stripping all sensitive or unused data from [PE images](https://learn.microsoft.com/en-us/windows/win32/debug/pe-format) using only the Windows Native API.
+A tool for stripping all sensitive or unused data from [PE images](https://learn.microsoft.com/en-us/windows/win32/debug/pe-format) using only the Windows Native API.
 
 ## Overview
 All of the modified data will be set to zero - that means your file size and structure will remain the same. A lot of the data is unused by the Windows PE Loader, so we can get rid of that. Some of the stripped stuff can probably cause some PE parsers to fail, so be aware of that.
@@ -16,7 +16,7 @@ Right now there's no user options, I'm planning on adding them.
   - x86/x64 both support both PE32/PE32+ binaries
 - Strips all sensitive/unused data from:
   - Rich header
-  - File header
+  - COFF header
   - Optional header
   - Section headers
   - Export directory

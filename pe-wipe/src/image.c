@@ -39,28 +39,28 @@ BOOLEAN PE_WipeRichHeader(PVOID pView)
     return TRUE;
 }
 
-BOOLEAN PE_WipeFileHeader(PVOID pView, ULONG HeaderType)
+BOOLEAN PE_WipeCOFFHeader(PVOID pView, ULONG HeaderType)
 {
-    IMAGE_FILE_HEADER* pFileHeader;
+    IMAGE_FILE_HEADER* pCOFFHeader;
 
     if (HeaderType == IMAGE_HEADER_TYPE_32)
     {
-        pFileHeader = PE_ImageFileHeader32(pView);
+        pCOFFHeader = PE_ImageCOFFHeader32(pView);
     }
     else
     {
-        pFileHeader = PE_ImageFileHeader64(pView);
+        pCOFFHeader = PE_ImageCOFFHeader64(pView);
     }
 
-    if (!pFileHeader)
+    if (!pCOFFHeader)
     {
         return FALSE;
     }
 
-    pFileHeader->TimeDateStamp = 0;
-    pFileHeader->PointerToSymbolTable = 0; /* Deprecated */
-    pFileHeader->NumberOfSymbols = 0; /* Deprecated */
-    pFileHeader->Characteristics &= ~(IMAGE_FILE_LINE_NUMS_STRIPPED | IMAGE_FILE_LOCAL_SYMS_STRIPPED); /* IMAGE_FILE_DEBUG_STRIPPED in PE_WipeDebugDirectory */
+    pCOFFHeader->TimeDateStamp = 0;
+    pCOFFHeader->PointerToSymbolTable = 0; /* Deprecated */
+    pCOFFHeader->NumberOfSymbols = 0; /* Deprecated */
+    pCOFFHeader->Characteristics &= ~(IMAGE_FILE_LINE_NUMS_STRIPPED | IMAGE_FILE_LOCAL_SYMS_STRIPPED); /* IMAGE_FILE_DEBUG_STRIPPED in PE_WipeDebugDirectory */
     return TRUE;
 }
 
@@ -111,27 +111,27 @@ BOOLEAN PE_WipeOptionalHeader(PVOID pView, ULONG HeaderType)
 
 BOOLEAN PE_WipeSectionHeaders(PVOID pView, ULONG HeaderType)
 {
-    IMAGE_FILE_HEADER* pFileHeader;
+    IMAGE_FILE_HEADER* pCOFFHeader;
 
     if (HeaderType == IMAGE_HEADER_TYPE_32)
     {
-        pFileHeader = PE_ImageFileHeader32(pView);
+        pCOFFHeader = PE_ImageCOFFHeader32(pView);
     }
     else
     {
-        pFileHeader = PE_ImageFileHeader64(pView);
+        pCOFFHeader = PE_ImageCOFFHeader64(pView);
     }
 
-    if (!pFileHeader)
+    if (!pCOFFHeader)
     {
         return FALSE;
     }
 
-    if (pFileHeader->NumberOfSections)
+    if (pCOFFHeader->NumberOfSections)
     {
-        IMAGE_SECTION_HEADER* pSectionHeaders = (IMAGE_SECTION_HEADER*)((BYTE*)pFileHeader + sizeof(*pFileHeader) + pFileHeader->SizeOfOptionalHeader);
+        IMAGE_SECTION_HEADER* pSectionHeaders = (IMAGE_SECTION_HEADER*)((BYTE*)pCOFFHeader + sizeof(*pCOFFHeader) + pCOFFHeader->SizeOfOptionalHeader);
         
-        for (WORD i = 0; i < pFileHeader->NumberOfSections; i += 1)
+        for (WORD i = 0; i < pCOFFHeader->NumberOfSections; i += 1)
         {
             IMAGE_SECTION_HEADER* pSectionHeader = pSectionHeaders + i;
 
@@ -247,14 +247,14 @@ BOOLEAN PE_WipeResourceDirectory(PVOID pView, ULONG HeaderType)
 
 BOOLEAN PE_WipeDebugDirectory(PVOID pView, ULONG HeaderType)
 {
-    IMAGE_FILE_HEADER* pFileHeader;
+    IMAGE_FILE_HEADER* pCOFFHeader;
     IMAGE_DATA_DIRECTORY* pDataDirectory;
 
     if (HeaderType == IMAGE_HEADER_TYPE_32)
     {
-        pFileHeader = PE_ImageFileHeader32(pView);
+        pCOFFHeader = PE_ImageCOFFHeader32(pView);
 
-        if (!pFileHeader)
+        if (!pCOFFHeader)
         {
             return FALSE;
         }
@@ -268,7 +268,7 @@ BOOLEAN PE_WipeDebugDirectory(PVOID pView, ULONG HeaderType)
 
         if (pOptionalHeader->NumberOfRvaAndSizes <= IMAGE_DIRECTORY_ENTRY_DEBUG)
         {
-            pFileHeader->Characteristics &= ~IMAGE_FILE_DEBUG_STRIPPED;
+            pCOFFHeader->Characteristics &= ~IMAGE_FILE_DEBUG_STRIPPED;
             return TRUE; /* No debug directory */
         }
 
@@ -276,9 +276,9 @@ BOOLEAN PE_WipeDebugDirectory(PVOID pView, ULONG HeaderType)
     }
     else
     {
-        pFileHeader = PE_ImageFileHeader64(pView);
+        pCOFFHeader = PE_ImageCOFFHeader64(pView);
 
-        if (!pFileHeader)
+        if (!pCOFFHeader)
         {
             return FALSE;
         }
@@ -292,7 +292,7 @@ BOOLEAN PE_WipeDebugDirectory(PVOID pView, ULONG HeaderType)
 
         if (pOptionalHeader->NumberOfRvaAndSizes <= IMAGE_DIRECTORY_ENTRY_DEBUG)
         {
-            pFileHeader->Characteristics &= ~IMAGE_FILE_DEBUG_STRIPPED;
+            pCOFFHeader->Characteristics &= ~IMAGE_FILE_DEBUG_STRIPPED;
             return TRUE; /* No debug directory */
         }
 
@@ -327,7 +327,7 @@ BOOLEAN PE_WipeDebugDirectory(PVOID pView, ULONG HeaderType)
         pDataDirectory->Size = 0;
     }
 
-    pFileHeader->Characteristics &= ~IMAGE_FILE_DEBUG_STRIPPED;
+    pCOFFHeader->Characteristics &= ~IMAGE_FILE_DEBUG_STRIPPED;
     return TRUE;
 }
 
@@ -397,33 +397,33 @@ BOOLEAN PE_WipeLoadConfigDirectory(PVOID pView, ULONG HeaderType)
     return TRUE;
 }
 
-BOOLEAN PE_ComputeCheckSum(PVOID pView, SIZE_T ViewSize)
+DWORD PE_ComputeCheckSum(PVOID pView, SIZE_T ViewSize)
 {
     /* TODO: Implement */
-    return FALSE;
+    return 0;
 }
 
 ULONG PE_VirtualToRaw(PVOID pView, ULONG Virtual, ULONG HeaderType)
 {
-    IMAGE_FILE_HEADER* pFileHeader = NULL;
+    IMAGE_FILE_HEADER* pCOFFHeader = NULL;
 
     if (HeaderType == IMAGE_HEADER_TYPE_32)
     {
-        pFileHeader = PE_ImageFileHeader32(pView);
+        pCOFFHeader = PE_ImageCOFFHeader32(pView);
     }
     else
     {
-        pFileHeader = PE_ImageFileHeader64(pView);
+        pCOFFHeader = PE_ImageCOFFHeader64(pView);
     }
 
-    if (!pFileHeader || !pFileHeader->NumberOfSections)
+    if (!pCOFFHeader || !pCOFFHeader->NumberOfSections)
     {
         return 0;
     }
 
-    IMAGE_SECTION_HEADER* pSectionHeaders = (IMAGE_SECTION_HEADER*)((BYTE*)pFileHeader + sizeof(*pFileHeader) + pFileHeader->SizeOfOptionalHeader);
+    IMAGE_SECTION_HEADER* pSectionHeaders = (IMAGE_SECTION_HEADER*)((BYTE*)pCOFFHeader + sizeof(*pCOFFHeader) + pCOFFHeader->SizeOfOptionalHeader);
 
-    for (WORD i = 0; i < pFileHeader->NumberOfSections; i += 1)
+    for (WORD i = 0; i < pCOFFHeader->NumberOfSections; i += 1)
     {
         IMAGE_SECTION_HEADER* pSectionHeader = pSectionHeaders + i;
 
@@ -474,15 +474,15 @@ ULONG PE_ImageHeaderType(PVOID pView)
     }
 
     BYTE* pNtHeaders = (BYTE*)pView + pDosHeader->e_lfanew;
-    IMAGE_FILE_HEADER* pFileHeader = (IMAGE_FILE_HEADER*)((BYTE*)pNtHeaders + sizeof(DWORD)); /* Skip Signature field */
+    IMAGE_FILE_HEADER* pCOFFHeader = (IMAGE_FILE_HEADER*)((BYTE*)pNtHeaders + sizeof(DWORD)); /* Skip Signature field */
 
-    if (pFileHeader->Machine == IMAGE_FILE_MACHINE_I386)
+    if (pCOFFHeader->Machine == IMAGE_FILE_MACHINE_I386)
     {
         return IMAGE_HEADER_TYPE_32;
     }
 
-    if (pFileHeader->Machine == IMAGE_FILE_MACHINE_AMD64 ||
-        pFileHeader->Machine == IMAGE_FILE_MACHINE_ARM64)
+    if (pCOFFHeader->Machine == IMAGE_FILE_MACHINE_AMD64 ||
+        pCOFFHeader->Machine == IMAGE_FILE_MACHINE_ARM64)
     {
         return IMAGE_HEADER_TYPE_64;
     }
@@ -528,7 +528,7 @@ IMAGE_NT_HEADERS64* PE_ImageNtHeaders64(PVOID pView)
     return pNtHeaders;
 }
 
-IMAGE_FILE_HEADER* PE_ImageFileHeader32(PVOID pView)
+IMAGE_FILE_HEADER* PE_ImageCOFFHeader32(PVOID pView)
 {
     IMAGE_NT_HEADERS32* pNtHeaders = PE_ImageNtHeaders32(pView);
 
@@ -545,7 +545,7 @@ IMAGE_FILE_HEADER* PE_ImageFileHeader32(PVOID pView)
     return &pNtHeaders->FileHeader;
 }
 
-IMAGE_FILE_HEADER* PE_ImageFileHeader64(PVOID pView)
+IMAGE_FILE_HEADER* PE_ImageCOFFHeader64(PVOID pView)
 {
     IMAGE_NT_HEADERS64* pNtHeaders = PE_ImageNtHeaders64(pView);
 
