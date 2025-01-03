@@ -5,6 +5,7 @@ PE Wipe is a tool for stripping all sensitive or unused data from [PE images](ht
 All of the modified data will be set to zero - that means your file size and structure will remain the same. A lot of the data is unused by the Windows PE Loader, so we can get rid of that. Some of the stripped stuff can probably cause some PE parsers to fail, so be aware of that.
 
 ## Usage
+Download the latest release from the [releases page][RELEASES_PAGE].
 ```
 pe-wipe.exe <filename>
 ```
@@ -25,3 +26,5 @@ Right now there's no user options, I'm planning on adding them.
 
 ## Credits
 - https://github.com/winsiderss/phnt by [winsiderss](https://github.com/winsiderss/) (Windows Native API headers)
+
+[RELEASES_PAGE]: https://github.com/kalhotky/pe-wipe/releases
