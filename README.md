@@ -10,18 +10,29 @@ Download the latest release from the [releases page][RELEASES_PAGE].
 Usage: pe-wipe <filename> [options]
 Options:
    -v              Display verbose processing information.
-   -frich          Don't wipe Rich header.
-   -fcoff          Don't wipe COFF header.
-   -fopt           Don't wipe Optional header.
-   -fsec           Don't wipe Section headers.
-   -fsec-n         Don't wipe Section headers names.
-   -fexp           Don't wipe Export directory.
-   -fres           Don't wipe Resource directory.
-   -fdbg           Don't wipe Debug directory.
-   -fcfg           Don't wipe LoadConfig directory.
-   -fts            Don't wipe timestamp fields.
-   -fuv            Don't wipe user version fields.
-   -flv            Don't wipe linker version fields.
+   -frich          Wipe Rich header.
+   -fcoff          Wipe COFF header.
+   -fcoff-ts       Wipe COFF header timestamp only.
+   -fopt           Wipe Optional header.
+   -fopt-lv        Wipe Optional header linker version only.
+   -fopt-v         Wipe Optional header version only.
+   -fsec           Wipe Section headers.
+   -fsec-n         Wipe Section headers names only.
+   -fsec-f         Wipe Section headers unused flags only.
+   -fexp           Wipe Export directory.
+   -fexp-ts        Wipe Export directory timestamp only.
+   -fexp-v         Wipe Export directory version only.
+   -fres           Wipe Resource directory.
+   -fres-ts        Wipe Resource directory timestamp only.
+   -fres-v         Wipe Resource directory version only.
+   -fdbg           Wipe Debug directory.
+   -fdbg-ts        Wipe Debug directory timestamp only.
+   -fdbg-v         Wipe Debug directory version only.
+   -fcfg           Wipe LoadConfig directory.
+   -fcfg-ts        Wipe LoadConfig directory timestamp only.
+   -fcfg-v         Wipe LoadConfig directory version only.
+   -fts            Wipe all timestamp fields only.
+   -fv             Wipe all version fields only.
 ```
 
 ## Features
