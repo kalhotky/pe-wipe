@@ -187,7 +187,9 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
         return CLI_STATUS_FAILURE;
     }
 
-    if (!pContext->Filters)
+    ULONG HasFilters = pContext->Filters & ~pContext->Verbose;
+
+    if (!HasFilters)
     {
         pContext->FRichHeader = TRUE;
         pContext->FCOFFHeader = TRUE;
