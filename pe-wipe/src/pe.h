@@ -2,8 +2,6 @@
 #include <phnt/phnt_windows.h>
 #include <phnt/phnt.h>
 
-/* image.c */
-
 #define IMAGE_RICH_SIGNATURE 0x68636952 /* Rich */
 #define IMAGE_DANS_SIGNATURE 0x536E6144 /* DanS */
 
@@ -55,6 +53,8 @@ typedef struct SPEContext
         };
     };
 } TPEContext;
+
+/* image.c */
 
 BOOLEAN PE_Wipe(TPEContext* pContext);
 
