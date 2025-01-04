@@ -1,11 +1,17 @@
 #include "pe.h"
+#include "util.h"
 
-NTSTATUS PE_MapView(UNICODE_STRING* pFullName, PVOID* ppView, SIZE_T* pViewSize)
+NTSTATUS PE_MapView(TPEContext* pContext)
 {
     UNICODE_STRING NtPathName;
-    if (!RtlDosPathNameToNtPathName_U(pFullName->Buffer, &NtPathName, NULL, NULL))
+    if (!RtlDosPathNameToNtPathName_U(pContext->pFileName, &NtPathName, NULL, NULL))
     {
         return STATUS_OBJECT_PATH_SYNTAX_BAD;
+    }
+
+    if (pContext->Verbose)
+    {
+        U_Msg("[>] NT path name: %ls\n", NtPathName.Buffer);
     }
 
     OBJECT_ATTRIBUTES ObjectAttributes;
@@ -36,6 +42,11 @@ NTSTATUS PE_MapView(UNICODE_STRING* pFullName, PVOID* ppView, SIZE_T* pViewSize)
         return Status;
     }
 
+    if (pContext->Verbose)
+    {
+        U_Msg("[>] File handle: 0x%zX\n", (SIZE_T)FileHandle);
+    }
+
     HANDLE SectionHandle;
     Status = NtCreateSection(&SectionHandle,
                              SECTION_MAP_READ | SECTION_MAP_WRITE,
@@ -53,24 +64,49 @@ NTSTATUS PE_MapView(UNICODE_STRING* pFullName, PVOID* ppView, SIZE_T* pViewSize)
 
     NtClose(FileHandle);
 
-    *ppView = NULL;
-    *pViewSize = 0;
+    if (pContext->Verbose)
+    {
+        U_Msg("[>] Section handle: 0x%zX\n", (SIZE_T)SectionHandle);
+    }
+
+    pContext->pView = NULL;
+    pContext->ViewSize = 0;
     Status = NtMapViewOfSection(SectionHandle,
                                 NtCurrentProcess(),
-                                &(*ppView),
+                                &pContext->pView,
                                 0,
                                 0,
                                 NULL,
-                                pViewSize,
+                                &pContext->ViewSize,
                                 ViewUnmap,
                                 0,
                                 PAGE_READWRITE);
+
+    if (NT_SUCCESS(Status) && pContext->Verbose)
+    {
+        U_Msg("[>] PE has been mapped!\n");
+        U_Msg("    View base: 0x%zX\n", (SIZE_T)pContext->pView);
+        U_Msg("    View size: 0x%zX\n", pContext->ViewSize);
+    }
 
     NtClose(SectionHandle);
     return Status;
 }
 
-NTSTATUS PE_UnmapView(PVOID pView)
+NTSTATUS PE_UnmapView(TPEContext* pContext)
 {
-    return NtUnmapViewOfSection(NtCurrentProcess(), pView);
+    NTSTATUS Status = NtUnmapViewOfSection(NtCurrentProcess(), pContext->pView);
+
+    if (NT_SUCCESS(Status))
+    {
+        pContext->pView = NULL;
+        pContext->ViewSize = 0;
+
+        if (pContext->Verbose)
+        {
+            U_Msg("[>] PE has been unmapped!\n");
+        }
+    }
+
+    return Status;
 }

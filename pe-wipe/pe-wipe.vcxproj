@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\cli.c" />
     <ClCompile Include="src\image.c" />
     <ClCompile Include="src\map.c" />
     <ClCompile Include="src\pe_wipe.c" />
@@ -64,6 +65,7 @@
     <ClInclude Include="include\phnt\subprocesstag.h" />
     <ClInclude Include="include\phnt\usermgr.h" />
     <ClInclude Include="include\phnt\winsta.h" />
+    <ClInclude Include="src\cli.h" />
     <ClInclude Include="src\pe.h" />
     <ClInclude Include="src\util.h" />
   </ItemGroup>

@@ -2,18 +2,31 @@
 A tool for stripping all sensitive or unused data from [PE images](https://learn.microsoft.com/en-us/windows/win32/debug/pe-format) using only the Windows Native API.
 
 ## Overview
-All of the modified data will be set to zero - that means your file size and structure will remain the same. A lot of the data is unused by the Windows PE Loader, so we can get rid of that. Some of the stripped stuff can probably cause some PE parsers to fail, so be aware of that.
+All of the stripped data will be set to zero - that means your file size and structure will remain the same. Strips sensitive data like `.pdb` paths, compiler, linker or debug information. Also strips unused data by the Windows Loader like timestamps, section names, flags and more.
 
 ## Usage
 Download the latest release from the [releases page][RELEASES_PAGE].
 ```
-pe-wipe.exe <filename>
+Usage: pe-wipe <filename> [options]
+Options:
+   -v              Display verbose processing information.
+   -frich          Don't wipe Rich header.
+   -fcoff          Don't wipe COFF header.
+   -fopt           Don't wipe Optional header.
+   -fsec           Don't wipe Section headers.
+   -fsec-n         Don't wipe Section headers names.
+   -fexp           Don't wipe Export directory.
+   -fres           Don't wipe Resource directory.
+   -fdbg           Don't wipe Debug directory.
+   -fcfg           Don't wipe LoadConfig directory.
+   -fts            Don't wipe timestamp fields.
+   -fuv            Don't wipe user version fields.
+   -flv            Don't wipe linker version fields.
 ```
-Right now there's no user options, I'm planning on adding them.
 
 ## Features
 - Cross-compatibility
-  - x86/x64 both support both PE32/PE32+ binaries
+  - x86/x64 both support PE32/PE32+ binaries
 - Strips all sensitive/unused data from:
   - Rich header
   - COFF header
