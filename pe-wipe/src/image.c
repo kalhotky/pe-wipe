@@ -56,11 +56,6 @@ BOOLEAN PE_Wipe(TPEContext* pContext)
         U_Msg("[!] Could't wipe %s\n", "LoadConfig directory");
     }
 
-    /*
-    * TODO: Fix checksum logic, for some fucking
-    *       reason it's offset by -0xC00
-    */
-
     if (!PE_GenerateCheckSum(pContext))
     {
         U_Msg("[!] Could't generate PE checksum\n");
