@@ -11,8 +11,8 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
     {
         /*
         * TODO:
-        *   -o          <filename> Create a new file.
-        *   -fstub      Don't wipe DOS stub.
+        *   -o          Create output file.
+        *   -fstub      Wipe DOS stub.
         */
 
         /* F stands for filter(s) */
@@ -55,7 +55,7 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
             "   -fts            Wipe all timestamp fields only.\n"
             "   -fv             Wipe all version fields only.\n"
 
-            /*"   -cs         Generate PE checksum.\n"*/
+            "   -cs             Generate PE checksum.\n"
         );
 
         return CLI_STATUS_SUCCESS;
@@ -169,10 +169,10 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
             pContext->FDebugDirectoryVersion = TRUE;
             pContext->FLoadConfigDirectoryVersion = TRUE;
         }
-        /*else if (CLI_OPTION("-cs"))
+        else if (CLI_OPTION("-cs"))
         {
             pContext->CheckSum = TRUE;
-        }*/
+        }
         else if (!pContext->pFileName)
         {
             pContext->pFileName = argv[i];
@@ -187,19 +187,14 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
         return CLI_STATUS_FAILURE;
     }
 
-    ULONG HasFilters = pContext->Filters & ~pContext->Verbose;
-
-    if (!HasFilters)
+    if (!pContext->Filters)
     {
-        pContext->FRichHeader = TRUE;
-        pContext->FCOFFHeader = TRUE;
-        pContext->FOptionalHeader = TRUE;
-        pContext->FSectionHeaders = TRUE;
-        pContext->FExportDirectory = TRUE;
-        pContext->FResourceDirectory = TRUE;
-        pContext->FDebugDirectory = TRUE;
-        pContext->FLoadConfigDirectory = TRUE;
-        /*pContext->CheckSum = TRUE;*/
+        pContext->Filters = 0xFFFFFFFF;
+
+        if (pContext->Verbose)
+        {
+            U_Msg("[>] Enabled all filters\n");
+        }
     }
 
     return CLI_STATUS_CONTINUE;

@@ -33,6 +33,7 @@ Options:
    -fcfg-v         Wipe LoadConfig directory version only.
    -fts            Wipe all timestamp fields only.
    -fv             Wipe all version fields only.
+   -cs             Generate PE checksum.
 ```
 
 ## Features

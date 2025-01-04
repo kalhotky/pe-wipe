@@ -47,6 +47,28 @@ NTSTATUS PE_MapView(TPEContext* pContext)
         U_Msg("[>] File handle: 0x%zX\n", (SIZE_T)FileHandle);
     }
 
+    FILE_STANDARD_INFORMATION FileInfo;
+    Status = NtQueryInformationFile(FileHandle, &IoStatusBlock, &FileInfo, sizeof(FileInfo), FileStandardInformation);
+
+    if (!NT_SUCCESS(Status))
+    {
+        NtClose(FileHandle);
+        return Status;
+    }
+
+    if (pContext->Verbose)
+    {
+        U_Msg("[>] File size: 0x%llX\n", FileInfo.EndOfFile.QuadPart);
+    }
+
+    if (FileInfo.EndOfFile.HighPart > 0)
+    {
+        NtClose(FileHandle);
+        return STATUS_INVALID_IMAGE_FORMAT;
+    }
+
+    pContext->FileSize = FileInfo.EndOfFile.LowPart;
+
     HANDLE SectionHandle;
     Status = NtCreateSection(&SectionHandle,
                              SECTION_MAP_READ | SECTION_MAP_WRITE,
@@ -56,13 +78,12 @@ NTSTATUS PE_MapView(TPEContext* pContext)
                              SEC_COMMIT,
                              FileHandle);
 
+    NtClose(FileHandle);
+
     if (!NT_SUCCESS(Status))
     {
-        NtClose(FileHandle);
         return Status;
     }
-
-    NtClose(FileHandle);
 
     if (pContext->Verbose)
     {
@@ -87,6 +108,7 @@ NTSTATUS PE_MapView(TPEContext* pContext)
         U_Msg("[>] PE has been mapped!\n");
         U_Msg("    View base: 0x%zX\n", (SIZE_T)pContext->pView);
         U_Msg("    View size: 0x%zX\n", pContext->ViewSize);
+        U_Msg("    File size: 0x%lX\n", pContext->FileSize);
     }
 
     NtClose(SectionHandle);

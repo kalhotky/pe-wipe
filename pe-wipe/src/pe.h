@@ -11,15 +11,24 @@ typedef struct SPEContext
 
     PVOID pView;
     SIZE_T ViewSize;
+    ULONG FileSize;
     ULONG Bits; /* 32/64 */
+
+    union
+    {
+        ULONG Options;
+        struct
+        {
+            BOOLEAN Verbose : 1;
+            BOOLEAN CheckSum : 1;
+        };
+    };
 
     union
     {
         ULONG Filters;
         struct
         {
-            BOOLEAN Verbose : 1;
-
             BOOLEAN FRichHeader : 1;
 
             BOOLEAN FCOFFHeader : 1;
@@ -48,8 +57,6 @@ typedef struct SPEContext
             BOOLEAN FLoadConfigDirectory : 1;
             BOOLEAN FLoadConfigDirectoryTimeStamp : 1;
             BOOLEAN FLoadConfigDirectoryVersion : 1;
-
-            BOOLEAN CheckSum : 1;
         };
     };
 } TPEContext;

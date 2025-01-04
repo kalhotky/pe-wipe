@@ -59,12 +59,12 @@ BOOLEAN PE_Wipe(TPEContext* pContext)
     /*
     * TODO: Fix checksum logic, for some fucking
     *       reason it's offset by -0xC00
-    * 
+    */
+
     if (!PE_GenerateCheckSum(pContext))
     {
         U_Msg("[!] Could't generate PE checksum\n");
     }
-    */
 
     U_Msg("[+] PE %ls has been stripped!\n", pContext->pFileName);
     return TRUE;
@@ -759,7 +759,7 @@ BOOLEAN PE_WipeLoadConfigDirectory(TPEContext* pContext)
 
 DWORD PE_ComputeCheckSum(TPEContext* pContext)
 {
-    ULONG RawIgnore;
+    ULONG IgnoreRaw;
 
     if (pContext->Bits == 32)
     {
@@ -770,7 +770,7 @@ DWORD PE_ComputeCheckSum(TPEContext* pContext)
             return 0;
         }
 
-        RawIgnore = (ULONG)((BYTE*)&pOptionalHeader->CheckSum - (BYTE*)pContext->pView);
+        IgnoreRaw = (ULONG)((BYTE*)&pOptionalHeader->CheckSum - (BYTE*)pContext->pView);
     }
     else
     {
@@ -781,46 +781,21 @@ DWORD PE_ComputeCheckSum(TPEContext* pContext)
             return 0;
         }
 
-        RawIgnore = (ULONG)((BYTE*)&pOptionalHeader->CheckSum - (BYTE*)pContext->pView);
+        IgnoreRaw = (ULONG)((BYTE*)&pOptionalHeader->CheckSum - (BYTE*)pContext->pView);
     }
 
-    ULONG ImageSize = (ULONG)pContext->ViewSize;
     ULONG64 CheckSum = 0;
-    ULONG64 Limit = 0x100000000;
 
-    for (ULONG i = 0; i < ImageSize; i += sizeof(ULONG))
+    for (ULONG i = 0; i < pContext->FileSize; i += sizeof(USHORT))
     {
-        if (i != RawIgnore)
+        if (i >= IgnoreRaw && i < (IgnoreRaw + sizeof(IgnoreRaw)))
         {
-            ULONG Data = *((ULONG*)((BYTE*)pContext->pView + i));
-
-            CheckSum = (CheckSum & 0xFFFFFFFF) + (CheckSum >> 32);
-            CheckSum += Data;
-
-            if (CheckSum > Limit)
-            {
-                CheckSum = (CheckSum & 0xFFFFFFFF) + (CheckSum >> 32);
-            }
-        }
-    }
-
-    ULONG Remainder = ImageSize % sizeof(ULONG);
-
-    if (Remainder)
-    {
-        ULONG Pos = ImageSize - Remainder;
-        ULONG Data = 0;
-
-        for (ULONG i = Pos; i < Remainder; i += 1)
-        {
-            BYTE SingleData = *((BYTE*)pContext->pView + i);
-            Data |= SingleData << (i << 3);
+            continue; /* Ignore checksum field */
         }
 
-        CheckSum = (CheckSum & 0xFFFFFFFF) + (CheckSum >> 32);
-        CheckSum += Data;
+        CheckSum += *((USHORT*)((BYTE*)pContext->pView + i));
 
-        if (CheckSum > Limit)
+        if (CheckSum > 0xFFFFFFFF)
         {
             CheckSum = (CheckSum & 0xFFFFFFFF) + (CheckSum >> 32);
         }
@@ -829,7 +804,7 @@ DWORD PE_ComputeCheckSum(TPEContext* pContext)
     CheckSum = (CheckSum & 0xFFFF) + (CheckSum >> 16);
     CheckSum += CheckSum >> 16;
     CheckSum &= 0xFFFF;
-    CheckSum += ImageSize;
+    CheckSum += pContext->FileSize;
 
     return (CheckSum & 0xFFFFFFFF);
 }
