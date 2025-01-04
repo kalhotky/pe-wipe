@@ -72,7 +72,7 @@ BOOLEAN PE_Wipe(TPEContext* pContext)
 
 BOOLEAN PE_WipeRichHeader(TPEContext* pContext)
 {
-    if (pContext->FRichHeader)
+    if (!pContext->FRichHeader)
     {
         return TRUE;
     }
@@ -132,7 +132,8 @@ BOOLEAN PE_WipeRichHeader(TPEContext* pContext)
 
 BOOLEAN PE_WipeCOFFHeader(TPEContext* pContext)
 {
-    if (pContext->FCOFFHeader)
+    if (!pContext->FCOFFHeader &&
+        !pContext->FCOFFHeaderTimeStamp)
     {
         return TRUE;
     }
@@ -158,14 +159,18 @@ BOOLEAN PE_WipeCOFFHeader(TPEContext* pContext)
         U_Msg("[>] Wiping %s...\n", "COFF header");
     }
 
-    if (!pContext->FTimeStamp)
+    if (pContext->FCOFFHeader ||
+        pContext->FCOFFHeaderTimeStamp)
     {
         pCOFFHeader->TimeDateStamp = 0;
     }
 
-    pCOFFHeader->PointerToSymbolTable = 0; /* Deprecated */
-    pCOFFHeader->NumberOfSymbols = 0; /* Deprecated */
-    pCOFFHeader->Characteristics &= ~(IMAGE_FILE_LINE_NUMS_STRIPPED | IMAGE_FILE_LOCAL_SYMS_STRIPPED); /* IMAGE_FILE_DEBUG_STRIPPED in PE_WipeDebugDirectory */
+    if (pContext->FCOFFHeader)
+    {
+        pCOFFHeader->PointerToSymbolTable = 0; /* Deprecated */
+        pCOFFHeader->NumberOfSymbols = 0; /* Deprecated */
+        pCOFFHeader->Characteristics &= ~(IMAGE_FILE_LINE_NUMS_STRIPPED | IMAGE_FILE_LOCAL_SYMS_STRIPPED); /* IMAGE_FILE_DEBUG_STRIPPED in PE_WipeDebugDirectory */
+    }
 
     if (pContext->Verbose)
     {
@@ -177,7 +182,9 @@ BOOLEAN PE_WipeCOFFHeader(TPEContext* pContext)
 
 BOOLEAN PE_WipeOptionalHeader(TPEContext* pContext)
 {
-    if (pContext->FOptionalHeader)
+    if (!pContext->FOptionalHeader &&
+        !pContext->FOptionalHeaderLinkerVersion &&
+        !pContext->FOptionalHeaderVersion)
     {
         return TRUE;
     }
@@ -196,19 +203,24 @@ BOOLEAN PE_WipeOptionalHeader(TPEContext* pContext)
             U_Msg("[>] Wiping %s...\n", "Optional header");
         }
 
-        if (!pContext->FLinkerVersion)
+        if (pContext->FOptionalHeader ||
+            pContext->FOptionalHeaderLinkerVersion)
         {
             pOptionalHeader->MajorLinkerVersion = 0;
             pOptionalHeader->MinorLinkerVersion = 0;
         }
 
-        pOptionalHeader->SizeOfCode = 0;
-        pOptionalHeader->SizeOfInitializedData = 0;
-        pOptionalHeader->SizeOfUninitializedData = 0;
-        pOptionalHeader->BaseOfCode = 0;
-        pOptionalHeader->BaseOfData = 0;
+        if (pContext->FOptionalHeader)
+        {
+            pOptionalHeader->SizeOfCode = 0;
+            pOptionalHeader->SizeOfInitializedData = 0;
+            pOptionalHeader->SizeOfUninitializedData = 0;
+            pOptionalHeader->BaseOfCode = 0;
+            pOptionalHeader->BaseOfData = 0;
+        }
 
-        if (!pContext->FUserVersion)
+        if (pContext->FOptionalHeader ||
+            pContext->FOptionalHeaderVersion)
         {
             pOptionalHeader->MajorImageVersion = 0;
             pOptionalHeader->MinorImageVersion = 0;
@@ -235,18 +247,23 @@ BOOLEAN PE_WipeOptionalHeader(TPEContext* pContext)
             U_Msg("[>] Wiping %s...\n", "Optional header");
         }
 
-        if (!pContext->FLinkerVersion)
+        if (pContext->FOptionalHeader ||
+            pContext->FOptionalHeaderLinkerVersion)
         {
             pOptionalHeader->MajorLinkerVersion = 0;
             pOptionalHeader->MinorLinkerVersion = 0;
         }
 
-        pOptionalHeader->SizeOfCode = 0;
-        pOptionalHeader->SizeOfInitializedData = 0;
-        pOptionalHeader->SizeOfUninitializedData = 0;
-        pOptionalHeader->BaseOfCode = 0;
+        if (pContext->FOptionalHeader)
+        {
+            pOptionalHeader->SizeOfCode = 0;
+            pOptionalHeader->SizeOfInitializedData = 0;
+            pOptionalHeader->SizeOfUninitializedData = 0;
+            pOptionalHeader->BaseOfCode = 0;
+        }
 
-        if (!pContext->FUserVersion)
+        if (pContext->FOptionalHeader ||
+            pContext->FOptionalHeaderVersion)
         {
             pOptionalHeader->MajorImageVersion = 0;
             pOptionalHeader->MinorImageVersion = 0;
@@ -265,7 +282,9 @@ BOOLEAN PE_WipeOptionalHeader(TPEContext* pContext)
 
 BOOLEAN PE_WipeSectionHeaders(TPEContext* pContext)
 {
-    if (pContext->FSectionHeaders)
+    if (!pContext->FSectionHeaders &&
+        !pContext->FSectionHeadersNames &&
+        !pContext->FSectionHeadersFlags)
     {
         return TRUE;
     }
@@ -313,16 +332,25 @@ BOOLEAN PE_WipeSectionHeaders(TPEContext* pContext)
                 }
             }
 
-            if (!pContext->FSectionHeadersNames)
+            if (pContext->FSectionHeaders ||
+                pContext->FSectionHeadersNames)
             {
                 memset(pSectionHeader->Name, 0, sizeof(pSectionHeader->Name));
             }
 
-            pSectionHeader->PointerToRelocations = 0; /* Not set for PE images */
-            pSectionHeader->PointerToLinenumbers = 0; /* Deprecated */
-            pSectionHeader->NumberOfRelocations = 0; /* Not set for PE images */
-            pSectionHeader->NumberOfLinenumbers = 0; /* Deprecated */
-            pSectionHeader->Characteristics = PE_FixUpSectionFlags(pSectionHeader->Characteristics); /* Add user option */
+            if (pContext->FSectionHeaders)
+            {
+                pSectionHeader->PointerToRelocations = 0; /* Not set for PE images */
+                pSectionHeader->PointerToLinenumbers = 0; /* Deprecated */
+                pSectionHeader->NumberOfRelocations = 0; /* Not set for PE images */
+                pSectionHeader->NumberOfLinenumbers = 0; /* Deprecated */
+            }
+
+            if (pContext->FSectionHeaders ||
+                pContext->FSectionHeadersFlags)
+            {
+                pSectionHeader->Characteristics = PE_FixUpSectionFlags(pSectionHeader->Characteristics);
+            }
         }
 
         if (pContext->Verbose)
@@ -336,7 +364,9 @@ BOOLEAN PE_WipeSectionHeaders(TPEContext* pContext)
 
 BOOLEAN PE_WipeExportDirectory(TPEContext* pContext)
 {
-    if (pContext->FExportDirectory || (!pContext->FTimeStamp && !pContext->FUserVersion))
+    if (!pContext->FExportDirectory &&
+        !pContext->FExportDirectoryTimeStamp &&
+        !pContext->FExportDirectoryVersion)
     {
         return TRUE;
     }
@@ -385,12 +415,14 @@ BOOLEAN PE_WipeExportDirectory(TPEContext* pContext)
             U_Msg("[>] Wiping %s...\n", "Export directory");
         }
 
-        if (!pContext->FTimeStamp)
+        if (pContext->FExportDirectory ||
+            pContext->FExportDirectoryTimeStamp)
         {
             pExportDirectory->TimeDateStamp = 0;
         }
 
-        if (!pContext->FUserVersion)
+        if (pContext->FExportDirectory ||
+            pContext->FExportDirectoryVersion)
         {
             pExportDirectory->MajorVersion = 0;
             pExportDirectory->MinorVersion = 0;
@@ -407,7 +439,9 @@ BOOLEAN PE_WipeExportDirectory(TPEContext* pContext)
 
 BOOLEAN PE_WipeResourceDirectory(TPEContext* pContext)
 {
-    if (pContext->FResourceDirectory || (!pContext->FTimeStamp && !pContext->FUserVersion))
+    if (!pContext->FResourceDirectory &&
+        !pContext->FResourceDirectoryTimeStamp &&
+        !pContext->FResourceDirectoryVersion)
     {
         return TRUE;
     }
@@ -456,12 +490,14 @@ BOOLEAN PE_WipeResourceDirectory(TPEContext* pContext)
             U_Msg("[>] Wiping %s...\n", "Resource directory");
         }
 
-        if (!pContext->FTimeStamp)
+        if (pContext->FResourceDirectory ||
+            pContext->FResourceDirectoryTimeStamp)
         {
             pResourceDirectory->TimeDateStamp = 0;
         }
 
-        if (!pContext->FUserVersion)
+        if (pContext->FResourceDirectory ||
+            pContext->FResourceDirectoryVersion)
         {
             pResourceDirectory->MajorVersion = 0;
             pResourceDirectory->MinorVersion = 0;
@@ -478,7 +514,9 @@ BOOLEAN PE_WipeResourceDirectory(TPEContext* pContext)
 
 BOOLEAN PE_WipeDebugDirectory(TPEContext* pContext)
 {
-    if (pContext->FDebugDirectory)
+    if (!pContext->FDebugDirectory &&
+        !pContext->FDebugDirectoryTimeStamp &&
+        !pContext->FDebugDirectoryVersion)
     {
         return TRUE;
     }
@@ -562,24 +600,41 @@ BOOLEAN PE_WipeDebugDirectory(TPEContext* pContext)
                 U_Msg("        Type: 0x%lX\n", pDebugDirectory->Type);
             }
 
-            if (pDebugDirectory->PointerToRawData && pDebugDirectory->SizeOfData)
+            if (pContext->FDebugDirectoryTimeStamp) /* Skip pContext->FDebugDirectory */
             {
-                BYTE* pDebugData = (BYTE*)pContext->pView + pDebugDirectory->PointerToRawData;
-
-                if (pContext->Verbose)
-                {
-                    U_Msg("            Data base: 0x%zX\n", (SIZE_T)pDebugData);
-                    U_Msg("            Data size: 0x%lX\n", pDebugDirectory->SizeOfData);
-                }
-
-                memset(pDebugData, 0, pDebugDirectory->SizeOfData);
+                pDebugDirectory->TimeDateStamp = 0;
             }
 
-            memset(pDebugDirectory, 0, sizeof(*pDebugDirectory));
+            if (pContext->FDebugDirectoryVersion) /* Skip pContext->FDebugDirectory */
+            {
+                pDebugDirectory->MajorVersion = 0;
+                pDebugDirectory->MinorVersion = 0;
+            }
+
+            if (pContext->FDebugDirectory)
+            {
+                if (pDebugDirectory->PointerToRawData && pDebugDirectory->SizeOfData)
+                {
+                    BYTE* pDebugData = (BYTE*)pContext->pView + pDebugDirectory->PointerToRawData;
+
+                    if (pContext->Verbose)
+                    {
+                        U_Msg("            Data base: 0x%zX\n", (SIZE_T)pDebugData);
+                        U_Msg("            Data size: 0x%lX\n", pDebugDirectory->SizeOfData);
+                    }
+
+                    memset(pDebugData, 0, pDebugDirectory->SizeOfData);
+                }
+
+                memset(pDebugDirectory, 0, sizeof(*pDebugDirectory));
+            }
         }
 
-        pDataDirectory->VirtualAddress = 0;
-        pDataDirectory->Size = 0;
+        if (pContext->FDebugDirectory)
+        {
+            pDataDirectory->VirtualAddress = 0;
+            pDataDirectory->Size = 0;
+        }
 
         if (pContext->Verbose)
         {
@@ -593,7 +648,9 @@ BOOLEAN PE_WipeDebugDirectory(TPEContext* pContext)
 
 BOOLEAN PE_WipeLoadConfigDirectory(TPEContext* pContext)
 {
-    if (pContext->FLoadConfigDirectory || (!pContext->FTimeStamp && !pContext->FUserVersion))
+    if (!pContext->FLoadConfigDirectory &&
+        !pContext->FLoadConfigDirectoryTimeStamp &&
+        !pContext->FLoadConfigDirectoryVersion)
     {
         return TRUE;
     }
@@ -628,12 +685,14 @@ BOOLEAN PE_WipeLoadConfigDirectory(TPEContext* pContext)
                     U_Msg("[>] Wiping %s...\n", "LoadConfig directory");
                 }
 
-                if (!pContext->FTimeStamp)
+                if (pContext->FLoadConfigDirectory ||
+                    pContext->FLoadConfigDirectoryTimeStamp)
                 {
                     pLoadConfigDirectory->TimeDateStamp = 0;
                 }
 
-                if (!pContext->FUserVersion)
+                if (pContext->FLoadConfigDirectory ||
+                    pContext->FLoadConfigDirectoryVersion)
                 {
                     pLoadConfigDirectory->MajorVersion = 0;
                     pLoadConfigDirectory->MinorVersion = 0;
@@ -674,12 +733,14 @@ BOOLEAN PE_WipeLoadConfigDirectory(TPEContext* pContext)
                     U_Msg("[>] Wiping %s...\n", "LoadConfig directory");
                 }
 
-                if (!pContext->FTimeStamp)
+                if (pContext->FLoadConfigDirectory ||
+                    pContext->FLoadConfigDirectoryTimeStamp)
                 {
                     pLoadConfigDirectory->TimeDateStamp = 0;
                 }
 
-                if (!pContext->FUserVersion)
+                if (pContext->FLoadConfigDirectory ||
+                    pContext->FLoadConfigDirectoryVersion)
                 {
                     pLoadConfigDirectory->MajorVersion = 0;
                     pLoadConfigDirectory->MinorVersion = 0;

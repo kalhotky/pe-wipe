@@ -2,9 +2,6 @@
 #include <phnt/phnt_windows.h>
 #include <phnt/phnt.h>
 
-#define PEWIPE_VERSION  "0.2.0"
-#define PEWIPE_AUTHOR   "https://github.com/kalhotky"
-
 /* image.c */
 
 #define IMAGE_RICH_SIGNATURE 0x68636952 /* Rich */
@@ -18,26 +15,45 @@ typedef struct SPEContext
     SIZE_T ViewSize;
     ULONG Bits; /* 32/64 */
 
-    BOOLEAN Verbose : 1;
+    union
+    {
+        ULONG Filters;
+        struct
+        {
+            BOOLEAN Verbose : 1;
 
-    /* F stands for Filter(s) */
+            BOOLEAN FRichHeader : 1;
 
-    BOOLEAN FRichHeader : 1;
-    BOOLEAN FCOFFHeader : 1;
-    BOOLEAN FOptionalHeader : 1;
-    BOOLEAN FSectionHeaders : 1;
-    BOOLEAN FSectionHeadersNames : 1;
+            BOOLEAN FCOFFHeader : 1;
+            BOOLEAN FCOFFHeaderTimeStamp : 1;
 
-    BOOLEAN FExportDirectory : 1;
-    BOOLEAN FResourceDirectory : 1;
-    BOOLEAN FDebugDirectory : 1;
-    BOOLEAN FLoadConfigDirectory : 1;
+            BOOLEAN FOptionalHeader : 1;
+            BOOLEAN FOptionalHeaderLinkerVersion : 1;
+            BOOLEAN FOptionalHeaderVersion : 1;
 
-    BOOLEAN FTimeStamp : 1;
-    BOOLEAN FUserVersion : 1;
-    BOOLEAN FLinkerVersion : 1;
+            BOOLEAN FSectionHeaders : 1;
+            BOOLEAN FSectionHeadersNames : 1;
+            BOOLEAN FSectionHeadersFlags : 1;
 
-    BOOLEAN CheckSum : 1;
+            BOOLEAN FExportDirectory : 1;
+            BOOLEAN FExportDirectoryTimeStamp : 1;
+            BOOLEAN FExportDirectoryVersion : 1;
+
+            BOOLEAN FResourceDirectory : 1;
+            BOOLEAN FResourceDirectoryTimeStamp : 1;
+            BOOLEAN FResourceDirectoryVersion : 1;
+
+            BOOLEAN FDebugDirectory : 1;
+            BOOLEAN FDebugDirectoryTimeStamp : 1;
+            BOOLEAN FDebugDirectoryVersion : 1;
+
+            BOOLEAN FLoadConfigDirectory : 1;
+            BOOLEAN FLoadConfigDirectoryTimeStamp : 1;
+            BOOLEAN FLoadConfigDirectoryVersion : 1;
+
+            BOOLEAN CheckSum : 1;
+        };
+    };
 } TPEContext;
 
 BOOLEAN PE_Wipe(TPEContext* pContext);

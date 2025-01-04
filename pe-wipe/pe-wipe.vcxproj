@@ -68,6 +68,7 @@
     <ClInclude Include="src\cli.h" />
     <ClInclude Include="src\pe.h" />
     <ClInclude Include="src\util.h" />
+    <ClInclude Include="src\version.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
