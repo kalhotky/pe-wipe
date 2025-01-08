@@ -9,14 +9,6 @@
 
 // This header file provides access to Win32, plus NTSTATUS values and some access mask values.
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #ifndef __cplusplus
 #ifndef CINTERFACE
 #define CINTERFACE
@@ -47,17 +39,6 @@
 #endif
 #endif
 
-#ifndef MAXLONGLONG
-// The Windows SDK basetsd.h is missing the MAXLONGLONG definition. (dmex)
-#define MAXLONGLONG (0x7fffffffffffffff)
-#endif
-
-#ifndef MINLONGLONG
-// The Windows SDK basetsd.h references non-existent MAXLONGLONG definition
-// and breaks MINLONGLONG or in other cases results in a definition of zero. (dmex)
-#define MINLONGLONG ((LONGLONG)~MAXLONGLONG)
-#endif
-
 #ifndef ENABLE_RTL_NUMBER_OF_V2
 #define ENABLE_RTL_NUMBER_OF_V2
 #endif
@@ -78,10 +59,6 @@
 #define COM_NO_WINDOWS_H
 #endif
 
-#ifndef STRICT_TYPED_ITEMIDS
-#define STRICT_TYPED_ITEMIDS
-#endif
-
 #ifndef __cplusplus
 // This is needed to workaround C17 preprocessor errors when using legacy versions of the Windows SDK. (dmex)
 #ifndef MICROSOFT_WINDOWS_WINBASE_H_DEFINE_INTERLOCKED_CPLUSPLUS_OVERLOADS
@@ -89,26 +66,18 @@
 #endif
 #endif
 
-#ifdef __cplusplus
-#define RTL_ADDRESS_OF(v) (&const_cast<char&>(reinterpret_cast<const volatile char&>(v))) // _ADDRESSOF() macro
-#else
-#define RTL_ADDRESS_OF(v) (&(v))
-#endif
-
-#include "windows.h"
-#include "windowsx.h"
+#include <windows.h>
+#include <windowsx.h>
 #undef WIN32_NO_STATUS
-#include "ntstatus.h"
-#include "winioctl.h"
-#include "evntrace.h"
-#include "minidumpapiset.h"
-#include "objbase.h"
+#include <ntstatus.h>
+#include <winioctl.h>
+#include <evntrace.h>
 
 #ifdef COM_NO_WINDOWS_H
-#include "ole2.h"
+#include <ole2.h>
 #endif
 
-typedef DOUBLE *PDOUBLE;
+typedef double DOUBLE;
 typedef GUID *PGUID;
 
 // Desktop access rights
@@ -163,15 +132,5 @@ typedef GUID *PGUID;
 #define __PCGUID_DEFINED__
 typedef const GUID* PCGUID;
 #endif
-
-DEFINE_GUID(GUID_NULL, 0x00000000L, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-
-#if __STDC_VERSION__ >= 202311L
-#ifndef __cplusplus
-#define nullptr ((void *)0)
-#endif
-typedef typeof(nullptr) nullptr_t;
-#endif
-#include "stddef.h"
 
 #endif

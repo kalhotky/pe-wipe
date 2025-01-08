@@ -7,9 +7,7 @@
 #ifndef _NTSEAPI_H
 #define _NTSEAPI_H
 
-//
 // Privileges
-//
 
 #define SE_MIN_WELL_KNOWN_PRIVILEGE (2L)
 #define SE_CREATE_TOKEN_PRIVILEGE (2L)
@@ -50,9 +48,7 @@
 #define SE_DELEGATE_SESSION_USER_IMPERSONATE_PRIVILEGE (36L)
 #define SE_MAX_WELL_KNOWN_PRIVILEGE SE_DELEGATE_SESSION_USER_IMPERSONATE_PRIVILEGE
 
-//
 // Authz
-//
 
 // begin_rev
 
@@ -169,11 +165,7 @@ typedef enum _TOKEN_INFORMATION_CLASS
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_INVALID 0x00
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_INT64 0x01
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_UINT64 0x02
-// Case insensitive attribute value string by default.
-// Unless the flag TOKEN_SECURITY_ATTRIBUTE_VALUE_CASE_SENSITIVE
-// is set indicating otherwise.
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_STRING 0x03
-// Fully-qualified binary name.
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_FQBN 0x04
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_SID 0x05
 #define TOKEN_SECURITY_ATTRIBUTE_TYPE_BOOLEAN 0x06
@@ -181,18 +173,13 @@ typedef enum _TOKEN_INFORMATION_CLASS
 
 // Flags
 
-// Attribute must not be inherited across process spawns.
 #define TOKEN_SECURITY_ATTRIBUTE_NON_INHERITABLE 0x0001
-// Attribute value is compared in a case sensitive way. It is valid with string value
-// or composite type containing string value. For other types of value, this flag
-// will be ignored. Currently, it is valid with the two types:
-// TOKEN_SECURITY_ATTRIBUTE_TYPE_STRING and TOKEN_SECURITY_ATTRIBUTE_TYPE_FQBN.
 #define TOKEN_SECURITY_ATTRIBUTE_VALUE_CASE_SENSITIVE 0x0002
-#define TOKEN_SECURITY_ATTRIBUTE_USE_FOR_DENY_ONLY 0x0004 // Attribute is considered only for Deny Aces.
-#define TOKEN_SECURITY_ATTRIBUTE_DISABLED_BY_DEFAULT 0x0008 // Attribute is disabled by default.
-#define TOKEN_SECURITY_ATTRIBUTE_DISABLED 0x0010 // Attribute is disabled.
-#define TOKEN_SECURITY_ATTRIBUTE_MANDATORY 0x0020 // Attribute is mandatory.
-#define TOKEN_SECURITY_ATTRIBUTE_COMPARE_IGNORE 0x0040 // Attribute is ignored.
+#define TOKEN_SECURITY_ATTRIBUTE_USE_FOR_DENY_ONLY 0x0004
+#define TOKEN_SECURITY_ATTRIBUTE_DISABLED_BY_DEFAULT 0x0008
+#define TOKEN_SECURITY_ATTRIBUTE_DISABLED 0x0010
+#define TOKEN_SECURITY_ATTRIBUTE_MANDATORY 0x0020
+#define TOKEN_SECURITY_ATTRIBUTE_COMPARE_IGNORE 0x0040
 
 #define TOKEN_SECURITY_ATTRIBUTE_VALID_FLAGS ( \
     TOKEN_SECURITY_ATTRIBUTE_NON_INHERITABLE | \
@@ -202,24 +189,22 @@ typedef enum _TOKEN_INFORMATION_CLASS
     TOKEN_SECURITY_ATTRIBUTE_DISABLED | \
     TOKEN_SECURITY_ATTRIBUTE_MANDATORY)
 
-// Reserve upper 16 bits for custom flags. These should be preserved but not
-// validated as they do not affect security in any way.
 #define TOKEN_SECURITY_ATTRIBUTE_CUSTOM_FLAGS 0xffff0000
 
 // end_rev
 
-// private // CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE
+// private
 typedef struct _TOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE
 {
     ULONG64 Version;
     UNICODE_STRING Name;
 } TOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE, *PTOKEN_SECURITY_ATTRIBUTE_FQBN_VALUE;
 
-// private // CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE
+// private
 typedef struct _TOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE
 {
-    PVOID Value; // Pointer is BYTE aligned.
-    ULONG ValueLength; // In bytes
+    PVOID pValue;
+    ULONG ValueLength;
 } TOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE, *PTOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE;
 
 // private
@@ -239,24 +224,6 @@ typedef struct _TOKEN_SECURITY_ATTRIBUTE_V1
         PTOKEN_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE pOctetString;
     } Values;
 } TOKEN_SECURITY_ATTRIBUTE_V1, *PTOKEN_SECURITY_ATTRIBUTE_V1;
-
-// private
-typedef struct _TOKEN_SECURITY_ATTRIBUTE_RELATIVE_V1
-{
-    UNICODE_STRING Name;
-    USHORT ValueType;
-    USHORT Reserved;
-    ULONG Flags;
-    ULONG ValueCount;
-    union
-    {
-        ULONG pInt64[ANYSIZE_ARRAY];
-        ULONG pUint64[ANYSIZE_ARRAY];
-        ULONG ppString[ANYSIZE_ARRAY];
-        ULONG pFqbn[ANYSIZE_ARRAY];
-        ULONG pOctetString[ANYSIZE_ARRAY];
-    } Values;
-} TOKEN_SECURITY_ATTRIBUTE_RELATIVE_V1, *PTOKEN_SECURITY_ATTRIBUTE_RELATIVE_V1;
 
 // rev
 #define TOKEN_SECURITY_ATTRIBUTES_INFORMATION_VERSION_V1 1
@@ -635,6 +602,8 @@ NtGetCachedSigningLevel(
 
 #endif
 
+#if (PHNT_VERSION >= PHNT_REDSTONE)
+
 // rev
 typedef struct _SE_FILE_CACHE_CLAIM_INFORMATION
 {
@@ -649,8 +618,6 @@ typedef struct _SE_SET_FILE_CACHE_INFORMATION
     UNICODE_STRING CatalogDirectoryPath;
     SE_FILE_CACHE_CLAIM_INFORMATION OriginClaimInfo;
 } SE_SET_FILE_CACHE_INFORMATION, *PSE_SET_FILE_CACHE_INFORMATION;
-
-#if (PHNT_VERSION >= PHNT_REDSTONE)
 
 // rev
 NTSYSCALLAPI

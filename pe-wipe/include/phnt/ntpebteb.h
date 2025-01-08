@@ -7,17 +7,16 @@
 #ifndef _NTPEBTEB_H
 #define _NTPEBTEB_H
 
-#include "ntsxs.h"
-
 typedef struct _RTL_USER_PROCESS_PARAMETERS *PRTL_USER_PROCESS_PARAMETERS;
 typedef struct _RTL_CRITICAL_SECTION *PRTL_CRITICAL_SECTION;
 typedef struct _SILO_USER_SHARED_DATA *PSILO_USER_SHARED_DATA;
 typedef struct _LEAP_SECOND_DATA *PLEAP_SECOND_DATA;
 
-// PEB->AppCompatFlags
+#include "ntsxs.h"
+
+// private
 #define KACF_OLDGETSHORTPATHNAME 0x00000001
 #define KACF_VERSIONLIE_NOT_USED 0x00000002
-#define KACF_GETTEMPPATH_NOT_USED 0x00000004
 #define KACF_GETDISKFREESPACE 0x00000008
 #define KACF_FTMFROMCURRENTAPT 0x00000020
 #define KACF_DISALLOWORBINDINGCHANGES 0x00000040
@@ -40,7 +39,7 @@ typedef struct _LEAP_SECOND_DATA *PLEAP_SECOND_DATA;
 #define KACF_ALLOWMAXIMIZEDWINDOWGAMMA 0x01000000
 #define KACF_DONOTADDTOCACHE 0x80000000
 
-// PEB->ApiSetMap
+// private
 typedef struct _API_SET_NAMESPACE
 {
     ULONG Version;
@@ -80,7 +79,7 @@ typedef struct _API_SET_VALUE_ENTRY
     ULONG ValueLength;
 } API_SET_VALUE_ENTRY, *PAPI_SET_VALUE_ENTRY;
 
-// PEB->TelemetryCoverageHeader
+// private
 typedef struct _TELEMETRY_COVERAGE_HEADER
 {
     UCHAR MajorVersion;
@@ -101,121 +100,6 @@ typedef struct _TELEMETRY_COVERAGE_HEADER
     ULONG Reserved3[4];
     ULONG HashTable[ANYSIZE_ARRAY];
 } TELEMETRY_COVERAGE_HEADER, *PTELEMETRY_COVERAGE_HEADER;
-
-typedef struct _WER_RECOVERY_INFO
-{
-    ULONG Length;
-    PVOID Callback;
-    PVOID Parameter;
-    HANDLE Started;
-    HANDLE Finished;
-    HANDLE InProgress;
-    LONG LastError;
-    BOOL Successful;
-    ULONG PingInterval;
-    ULONG Flags;
-} WER_RECOVERY_INFO, *PWER_RECOVERY_INFO;
-
-typedef struct _WER_FILE
-{
-    USHORT Flags;
-    WCHAR Path[MAX_PATH];
-} WER_FILE, *PWER_FILE;
-
-typedef struct _WER_MEMORY
-{
-    PVOID Address;
-    ULONG Size;
-} WER_MEMORY, *PWER_MEMORY;
-
-typedef struct _WER_GATHER
-{
-    PVOID Next;
-    USHORT Flags;    
-    union
-    {
-      WER_FILE File;
-      WER_MEMORY Memory;
-    } v;
-} WER_GATHER, *PWER_GATHER;
-
-typedef struct _WER_METADATA
-{
-    PVOID Next;
-    WCHAR Key[64];
-    WCHAR Value[128];
-} WER_METADATA, *PWER_METADATA;
-
-typedef struct _WER_RUNTIME_DLL
-{
-    PVOID Next;
-    ULONG Length;
-    PVOID Context;
-    WCHAR CallbackDllPath[MAX_PATH];
-} WER_RUNTIME_DLL, *PWER_RUNTIME_DLL;
-
-typedef struct _WER_DUMP_COLLECTION
-{
-    PVOID Next;
-    ULONG ProcessId;
-    ULONG ThreadId;
-} WER_DUMP_COLLECTION, *PWER_DUMP_COLLECTION;
-
-typedef struct _WER_HEAP_MAIN_HEADER
-{
-    WCHAR Signature[16];
-    LIST_ENTRY Links;
-    HANDLE Mutex;
-    PVOID FreeHeap;
-    ULONG FreeCount;
-} WER_HEAP_MAIN_HEADER, *PWER_HEAP_MAIN_HEADER;
-
-#ifndef RESTART_MAX_CMD_LINE
-#define RESTART_MAX_CMD_LINE 1024
-#endif
-
-typedef struct _WER_PEB_HEADER_BLOCK
-{
-    LONG Length;
-    WCHAR Signature[16];
-    WCHAR AppDataRelativePath[64];
-    WCHAR RestartCommandLine[RESTART_MAX_CMD_LINE];
-    WER_RECOVERY_INFO RecoveryInfo;
-    PWER_GATHER Gather;
-    PWER_METADATA MetaData;
-    PWER_RUNTIME_DLL RuntimeDll;
-    PWER_DUMP_COLLECTION DumpCollection;
-    LONG GatherCount;
-    LONG MetaDataCount;
-    LONG DumpCount;
-    LONG Flags;
-    WER_HEAP_MAIN_HEADER MainHeader;
-    PVOID Reserved;
-} WER_PEB_HEADER_BLOCK, *PWER_PEB_HEADER_BLOCK;
-
-#define GDI_HANDLE_BUFFER_SIZE32 34
-#define GDI_HANDLE_BUFFER_SIZE64 60
-
-#ifndef _WIN64
-#define GDI_HANDLE_BUFFER_SIZE GDI_HANDLE_BUFFER_SIZE32
-#else
-#define GDI_HANDLE_BUFFER_SIZE GDI_HANDLE_BUFFER_SIZE64
-#endif
-
-typedef ULONG GDI_HANDLE_BUFFER[GDI_HANDLE_BUFFER_SIZE];
-
-typedef ULONG GDI_HANDLE_BUFFER32[GDI_HANDLE_BUFFER_SIZE32];
-typedef ULONG GDI_HANDLE_BUFFER64[GDI_HANDLE_BUFFER_SIZE64];
-
-#ifndef FLS_MAXIMUM_AVAILABLE
-#define FLS_MAXIMUM_AVAILABLE 128
-#endif
-#ifndef TLS_MINIMUM_AVAILABLE
-#define TLS_MINIMUM_AVAILABLE 64
-#endif
-#ifndef TLS_EXPANSION_SLOTS
-#define TLS_EXPANSION_SLOTS 1024
-#endif
 
 // symbols
 typedef struct _PEB
@@ -238,6 +122,7 @@ typedef struct _PEB
             BOOLEAN IsLongPathAwareProcess : 1;
         };
     };
+
     HANDLE Mutant;
 
     PVOID ImageBaseAddress;
@@ -270,7 +155,6 @@ typedef struct _PEB
         PVOID KernelCallbackTable;
         PVOID UserSharedInfoPtr;
     };
-
     ULONG SystemReserved;
     ULONG AtlThunkSListPtr32;
     PAPI_SET_NAMESPACE ApiSetMap;
@@ -286,24 +170,15 @@ typedef struct _PEB
     PVOID OemCodePageData; // PCPTABLEINFO
     PVOID UnicodeCaseTableData; // PNLSTABLEINFO
 
-    // Information for LdrpInitialize
     ULONG NumberOfProcessors;
     ULONG NtGlobalFlag;
 
-    // Passed up from MmCreatePeb from Session Manager registry key
-    LARGE_INTEGER CriticalSectionTimeout;
+    ULARGE_INTEGER CriticalSectionTimeout;
     SIZE_T HeapSegmentReserve;
     SIZE_T HeapSegmentCommit;
     SIZE_T HeapDeCommitTotalFreeThreshold;
     SIZE_T HeapDeCommitFreeBlockThreshold;
 
-    //
-    // Where heap manager keeps track of all heaps created for a process
-    // Fields initialized by MmCreatePeb.  ProcessHeaps is initialized
-    // to point to the first free byte after the PEB and MaximumNumberOfHeaps
-    // is computed from the page size used to hold the PEB, less the fixed
-    // size of this data structure.
-    //
     ULONG NumberOfHeaps;
     ULONG MaximumNumberOfHeaps;
     PVOID *ProcessHeaps; // PHEAP
@@ -314,10 +189,6 @@ typedef struct _PEB
 
     PRTL_CRITICAL_SECTION LoaderLock;
 
-    //
-    // Following fields filled in by MmCreatePeb from system values and/or
-    // image header.
-    //
     ULONG OSMajorVersion;
     ULONG OSMinorVersion;
     USHORT OSBuildNumber;
@@ -361,7 +232,7 @@ typedef struct _PEB
     USHORT UseCaseMapping;
     USHORT UnusedNlsField;
 
-    PWER_PEB_HEADER_BLOCK WerRegistrationData;
+    PVOID WerRegistrationData;
     PVOID WerShipAssertPtr;
 
     union
@@ -429,21 +300,17 @@ typedef struct _GDI_TEB_BATCH
     ULONG Buffer[GDI_BATCH_BUFFER_SIZE];
 } GDI_TEB_BATCH, *PGDI_TEB_BATCH;
 
-#define TEB_ACTIVE_FRAME_CONTEXT_FLAG_EXTENDED (0x00000001)
-
 typedef struct _TEB_ACTIVE_FRAME_CONTEXT
 {
     ULONG Flags;
-    PCSTR FrameName;
+    PSTR FrameName;
 } TEB_ACTIVE_FRAME_CONTEXT, *PTEB_ACTIVE_FRAME_CONTEXT;
 
 typedef struct _TEB_ACTIVE_FRAME_CONTEXT_EX
 {
     TEB_ACTIVE_FRAME_CONTEXT BasicContext;
-    PCSTR SourceLocation;
+    PSTR SourceLocation;
 } TEB_ACTIVE_FRAME_CONTEXT_EX, *PTEB_ACTIVE_FRAME_CONTEXT_EX;
-
-#define TEB_ACTIVE_FRAME_FLAG_EXTENDED (0x00000001)
 
 typedef struct _TEB_ACTIVE_FRAME
 {
@@ -461,47 +328,14 @@ typedef struct _TEB_ACTIVE_FRAME_EX
 #define STATIC_UNICODE_BUFFER_LENGTH 261
 #define WIN32_CLIENT_INFO_LENGTH 62
 
-/**
- * Thread Environment Block (TEB) structure.
- *
- * This structure contains information about the currently executing thread.
- */
 typedef struct _TEB
 {
-    //
-    // Thread Information Block (TIB) contains the thread's stack, base and limit addresses, the current stack pointer, and the exception list.
-    //
-
     NT_TIB NtTib;
 
-    //
-    // A pointer to the environment block for the thread.
-    //
-
     PVOID EnvironmentPointer;
-
-    //
-    // Client ID for this thread.
-    //
-
     CLIENT_ID ClientId;
-
-    //
-    // A handle to an active Remote Procedure Call (RPC) if the thread is currently involved in an RPC operation.
-    //
-
     PVOID ActiveRpcHandle;
-
-    //
-    // A pointer to the __declspec(thread) local storage array.
-    //
-
     PVOID ThreadLocalStoragePointer;
-
-    //
-    // A pointer to the Process Environment Block (PEB), which contains information about the process.
-    //
-
     PPEB ProcessEnvironmentBlock;
 
     ULONG LastErrorValue;

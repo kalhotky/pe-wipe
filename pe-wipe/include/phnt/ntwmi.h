@@ -1698,7 +1698,7 @@ PerfIsGroupOnInGroupMask(
 //
 // Data structure used for WMI Kernel Events
 //
-// **NB** the hardware events are described in software tracing, if they
+// **NB** the hardware events are described in software traceing, if they
 //        change in layout please update sdktools\trace\tracefmt\default.tmf
 
 
@@ -2118,7 +2118,7 @@ typedef struct _WMI_IMAGELOAD_INFORMATION64
     WCHAR FileName[1];
 } WMI_IMAGELOAD_INFORMATION64, *PWMI_IMAGELOAD_INFORMATION64;
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _WMI_IMAGEID_INFORMATION
 {
     PVOID ImageBase;
@@ -2145,7 +2145,7 @@ typedef struct _WMI_IMAGEID_INFORMATION64
     ULONG TimeDateStamp;
     WCHAR OriginalFileName[1];
 } WMI_IMAGEID_INFORMATION64, *PWMI_IMAGEID_INFORMATION64;
-#include "poppack.h"
+#include <poppack.h>
 
 #define ETW_IO_FLAG_BACKUP              0x00000001
 #define ETW_IO_FLAG_PREFETCH            0x00000002
@@ -2349,7 +2349,7 @@ typedef struct _WMI_CONTEXTSWAP
 #define WMI_SPINLOCK_EVENT_EXECUTE_ISR_BIT         7
 #define WMI_SPINLOCK_ACQUIRE_MODE_MASK 0x3F
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _WMI_SPINLOCK
 {
     PVOID SpinLockAddress;
@@ -2377,7 +2377,7 @@ typedef struct _WMI_SPINLOCK
 
     UCHAR Reserved[5];
 } WMI_SPINLOCK, *PWMI_SPINLOCK;
-#include "poppack.h"
+#include <poppack.h>
 
 //
 // Logging every action on every instance of ERESOURCE is almost impossible.
@@ -2644,7 +2644,7 @@ typedef struct _ETW_CREATE_HANDLE_EVENT
 
 typedef ETW_CREATE_HANDLE_EVENT ETW_CLOSE_HANDLE_EVENT, *PETW_CLOSE_HANDLE_EVENT;
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_DUPLICATE_HANDLE_EVENT
 {
     PVOID Object;
@@ -2654,7 +2654,7 @@ typedef struct _ETW_DUPLICATE_HANDLE_EVENT
     USHORT ObjectType;
     ULONG SourceProcessId;
 } ETW_DUPLICATE_HANDLE_EVENT, *PETW_DUPLICATE_HANDLE_EVENT;
-#include "poppack.h"
+#include <poppack.h>
 
 typedef struct _ETW_OBJECT_TYPE_EVENT
 {
@@ -2699,15 +2699,15 @@ typedef struct _ETW_WAKE_COUNTER_EVENT
 // Heap events
 //
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_COMMON
 {
     SYSTEM_TRACE_HEADER Header;    // Header
     PVOID Handle;                  // Handle of Heap
 } ETW_HEAP_EVENT_COMMON, *PETW_HEAP_EVENT_COMMON;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_ALLOC
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2717,9 +2717,9 @@ typedef struct _ETW_HEAP_EVENT_ALLOC
     ULONG Source;                   // Type ie Lookaside, Lowfrag or main path
 
 } ETW_HEAP_EVENT_ALLOC, *PETW_HEAP_EVENT_ALLOC;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_FREE
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2728,9 +2728,9 @@ typedef struct _ETW_HEAP_EVENT_FREE
     ULONG Source;                   // Type ie Lookaside, Lowfrag or main path
 
 } ETW_HEAP_EVENT_FREE, *PETW_HEAP_EVENT_FREE;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_REALLOC
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2741,9 +2741,9 @@ typedef struct _ETW_HEAP_EVENT_REALLOC
     SIZE_T OldSize;                 // Old Size in bytes
     ULONG Source;                   // Type ie Lookaside, Lowfrag or main path
 } ETW_HEAP_EVENT_REALLOC, *PETW_HEAP_EVENT_REALLOC;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_EXPANSION
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2756,9 +2756,9 @@ typedef struct _ETW_HEAP_EVENT_EXPANSION
     ULONG NoOfUCRs;                 // Number of uncommitted ranges
     SIZE_T AllocatedSpace;          // Memory allocated
 } ETW_HEAP_EVENT_EXPANSION, *PETW_HEAP_EVENT_EXPANSION;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_CONTRACTION
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2772,9 +2772,9 @@ typedef struct _ETW_HEAP_EVENT_CONTRACTION
     SIZE_T AllocatedSpace;          // Memory allocated
 
 } ETW_HEAP_EVENT_CONTRACTION, *PETW_HEAP_EVENT_CONTRACTION;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_CREATE
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2784,7 +2784,7 @@ typedef struct _ETW_HEAP_EVENT_CREATE
     SIZE_T CommitSize;
     SIZE_T AllocatedSize;
 } ETW_HEAP_EVENT_CREATE, *PETW_HEAP_EVENT_CREATE;
-#include "poppack.h"
+#include <poppack.h>
 
 #define HEAP_LOG_CREATE_HEAP 1
 #define HEAP_LOG_FIND_AND_COMMIT_PAGES 2
@@ -2834,7 +2834,7 @@ typedef struct _HEAP_SUBSEGMENT_ALLOC
     HEAP_EVENT_SUBSEGMENT_ALLOC_FREE Event;
 } HEAP_SUBSEGMENT_ALLOC, *PHEAP_SUBSEGMENT_ALLOC;
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _HEAP_SUBSEGMENT_INIT
 {
     SYSTEM_TRACE_HEADER Header;
@@ -2844,18 +2844,18 @@ typedef struct _HEAP_SUBSEGMENT_INIT
     SIZE_T BlockCount;
     ULONG AffinityIndex;
 } HEAP_SUBSEGMENT_INIT, *PHEAP_SUBSEGMENT_INIT;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _HEAP_AFFINITY_MANAGER_ENABLE
 {
     SYSTEM_TRACE_HEADER Header;
     PVOID HeapHandle;
     ULONG BucketIndex;
 } HEAP_AFFINITY_MANAGER_ENABLE, *PHEAP_AFFINITY_MANAGER_ENABLE;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _HEAP_AFFINITY_SLOT_ASSIGN
 {
     SYSTEM_TRACE_HEADER Header;
@@ -2863,9 +2863,9 @@ typedef struct _HEAP_AFFINITY_SLOT_ASSIGN
     PVOID SubSegment;
     ULONG SlotIndex;
 } HEAP_AFFINITY_SLOT_ASSIGN, *PHEAP_AFFINITY_SLOT_ASSIGN;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _HEAP_REUSE_THRESHOLD_ACTIVATED
 {
     SYSTEM_TRACE_HEADER Header;
@@ -2873,18 +2873,18 @@ typedef struct _HEAP_REUSE_THRESHOLD_ACTIVATED
     PVOID SubSegment;
     ULONG BucketIndex;
 } HEAP_REUSE_THRESHOLD_ACTIVATED, *PHEAP_REUSE_THRESHOLD_ACTIVATED;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _HEAP_SUBSEGMENT_ACTIVATED
 {
     SYSTEM_TRACE_HEADER Header;
     PVOID HeapHandle;
     PVOID SubSegment;
 } HEAP_SUBSEGMENT_ACTIVATED, *PHEAP_SUBSEGMENT_ACTIVATED;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_SNAPSHOT
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2899,17 +2899,17 @@ typedef struct _ETW_HEAP_EVENT_SNAPSHOT
     ULONG UCRLength;
     SIZE_T AllocatedSpace;          // Total allocated space in heap, in bytes
 } ETW_HEAP_EVENT_SNAPSHOT, *PETW_HEAP_EVENT_SNAPSHOT;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_RUNDOWN_RANGE
 {
     PVOID Address;
     SIZE_T Size;
 } ETW_HEAP_EVENT_RUNDOWN_RANGE, *PETW_HEAP_EVENT_RUNDOWN_RANGE;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_HEAP_EVENT_RUNDOWN
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -2920,7 +2920,7 @@ typedef struct _ETW_HEAP_EVENT_RUNDOWN
     ULONG Reserved;   // for padding
     ETW_HEAP_EVENT_RUNDOWN_RANGE Ranges[1];
 } ETW_HEAP_EVENT_RUNDOWN, *PETW_HEAP_EVENT_RUNDOWN;
-#include "poppack.h"
+#include <poppack.h>
 
 typedef struct _HEAP_EVENT_RANGE_CREATE
 {
@@ -3330,70 +3330,6 @@ DEFINE_GUID( /* 472496cf-0daf-4f7c-ac2e-3f8457ecc6bb */
 // Spare guids for Perf/System events.
 //
 
-DEFINE_GUID( /* e8908abc-aa84-11d2-9a93-00805f85d7c6 */
-    GlobalLoggerGuid,
-    0xe8908abc,
-    0xaa84,
-    0x11d2,
-    0x9a, 0x93, 0x00, 0x80, 0x5f, 0x85, 0xd7, 0xc6
-    );
-
-DEFINE_GUID( /* 8d40301f-ab4a-11d2-9a93-00805f85d7c6 */
-    GenericMessageGuid,
-    0x8d40301f,
-    0xab4a,
-    0x11d2,
-    0x9a, 0x93, 0x00, 0x80, 0x5f, 0x85, 0xd7, 0xc6
-    );
-
-DEFINE_GUID( /* 398191dc-2da7-11d3-8b98-00805f85d7c6 */
-    TraceErrorGuid,
-    0x398191dc,
-    0x2da7,
-    0x11d3,
-    0x8b, 0x98, 0x00, 0x80, 0x5f, 0x85, 0xd7, 0xc6
-    );
-
-DEFINE_GUID( /* 3d6fa8d2-fe05-11d0-9dda-00c04fd7ba7c */ /* Not used */
-    HardFaultGuid,
-    0x3d6fa8d2,
-    0xfe05,
-    0x11d0,
-    0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c
-    );
-
-DEFINE_GUID( /* 44608a51-1851-4456-98b2-b300e931ee41 */
-    WmiEventLoggerGuid,
-    0x44608a51,
-    0x1851,
-    0x4456,
-    0x98, 0xb2, 0xb3, 0x00, 0xe9, 0x31, 0xee, 0x41
-    );
-
-DEFINE_GUID( /* 13976D09-A327-438c-950B-7F03192815C7  */
-    DbgPrintGuid,
-    0x13976d09,
-    0xa327,
-    0x438c,
-    0x95, 0xb, 0x7f, 0x3, 0x19, 0x28, 0x15, 0xc7
-    );
-
-DEFINE_GUID( /* D56CA431-61BF-4904-A621-00E0381E4DDE */
-    DriverVerifierGuid,
-    0xd56ca431,
-    0x61bf,
-    0x4904,
-    0xa6, 0x21, 0x0, 0xe0, 0x38, 0x1e, 0x4d, 0xde
-    );
-
-DEFINE_GUID( /* 78d14f17-0105-46d7-bfff-6fbea2f3f358 */
-    ApplicationVerifierGuid,
-    0x78d14f17,
-    0x0105,
-    0x46d7,
-    0xbf, 0xff, 0x6f, 0xbe, 0xa2, 0xf3, 0xf3, 0x58
-    );
-
 DEFINE_GUID( /* 3282fc76-feed-498e-8aa7-e70f459d430e */
     JobGuid,
     0x3282fc76,
@@ -3532,13 +3468,6 @@ DEFINE_GUID( /* E21D2142-DF90-4d93-BBD9-30E63D5A4AD6 */
     0xbb, 0xd9, 0x30, 0xe6, 0x3d, 0x5a, 0x4a, 0xd6
     );
 
-DEFINE_GUID(
-    UserLoaderGuid, /* b059b83f-d946-4b13-87ca-4292839dc2f2 */
-    0xb059b83f,
-    0xd946,
-    0x4b13, 0x87, 0xca, 0x42, 0x92, 0x83, 0x9d, 0xc2, 0xf2
-    );
-
 DEFINE_GUID( /* d3de60b2-a663-45d5-9826-a0a5949d2cb0 */
     LoadMUIDllGuid,
     0xd3de60b2,
@@ -3667,13 +3596,6 @@ DEFINE_GUID(  /* 2a6e185b-90de-4fc5-826c-9f44e608a427 */
     0x82, 0x6c, 0x9f, 0x44, 0xe6, 0x08, 0xa4, 0x27
     );
 
-//DEFINE_GUID(  /* 9e814aad-3204-11d2-9a82-006008a86939 */
-//    SystemTraceControlGuid,
-//    0x9e814aad,
-//    0x3204,
-//    0x11d2, 0x9a, 0x82, 0x00, 0x60, 0x08, 0xa8, 0x69, 0x39
-//    );
-
 DEFINE_GUID( /* 7687a439-f752-45b8-b741-321aec0f8df9 */
     CcGuid,
     0x7687a439,
@@ -3688,21 +3610,6 @@ DEFINE_GUID( /* 00000000-0000-0000-0000-000000000000 */
     0x0000,
     0x0000,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    );
-
-DEFINE_GUID(  /* 305fc87b-002a-5e26-d297-60223012ca9c */
-    UserDiagnosticGuid,
-    0x305fc87b,
-    0x002a,
-    0x5e26, 0xd2, 0x97, 0x60, 0x22, 0x30, 0x12, 0xca, 0x9c
-    );
-
-DEFINE_GUID(  /* e46eead8-0c54-4489-9898-8fa79d059e0e */
-    WerSvcTriggerGuid,
-    0xe46eead8,
-    0x0c54,
-    0x4489,
-    0x98, 0x98, 0x8f, 0xa7, 0x9d, 0x05, 0x9e, 0x0e
     );
 
 ///
@@ -3886,7 +3793,7 @@ typedef struct _ETW_TP_EVENT_WORKER_NUMANODE_SWITCH
 
 } ETW_TP_EVENT_WORKER_NUMANODE_SWITCH, *PETW_TP_EVENT_WORKER_NUMANODE_SWITCH;
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _ETW_TP_EVENT_TIMER_SET
 {
     SYSTEM_TRACE_HEADER Header;     // Header
@@ -3940,7 +3847,7 @@ typedef struct _ETW_TP_EVENT_TIMER_EXPIRATION
     ULONG Period;                   // period of the timer
     ULONG WindowLength;             // Tolerate period
 } ETW_TP_EVENT_TIMER_EXPIRATION, *PETW_TP_EVENT_TIMER_EXPIRATION;
-#include "poppack.h"
+#include <poppack.h>
 
 //
 // Thread SubProcessTag Changed Event
@@ -4014,7 +3921,7 @@ typedef struct _PERFINFO_MARK_EVENT
 // Structures for Driver hooks
 //
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_DRIVER_MAJORFUNCTION
 {
     ULONG MajorFunction;
@@ -4024,17 +3931,17 @@ typedef struct _PERFINFO_DRIVER_MAJORFUNCTION
     PVOID Irp;
     ULONG UniqMatchId;
 } PERFINFO_DRIVER_MAJORFUNCTION, *PPERFINFO_DRIVER_MAJORFUNCTION;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_DRIVER_MAJORFUNCTION_RET
 {
     PVOID Irp;
     ULONG UniqMatchId;
 } PERFINFO_DRIVER_MAJORFUNCTION_RET, *PPERFINFO_DRIVER_MAJORFUNCTION_RET;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_DRIVER_COMPLETE_REQUEST
 {
     //
@@ -4054,9 +3961,9 @@ typedef struct _PERFINFO_DRIVER_COMPLETE_REQUEST
     ULONG UniqMatchId;
 
 } PERFINFO_DRIVER_COMPLETE_REQUEST, *PPERFINFO_DRIVER_COMPLETE_REQUEST;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_DRIVER_COMPLETE_REQUEST_RET
 {
     //
@@ -4066,16 +3973,16 @@ typedef struct _PERFINFO_DRIVER_COMPLETE_REQUEST_RET
     PVOID Irp;
     ULONG UniqMatchId;
 } PERFINFO_DRIVER_COMPLETE_REQUEST_RET, *PPERFINFO_DRIVER_COMPLETE_REQUEST_RET;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_DRIVER_COMPLETIONROUTINE
 {
     PVOID Routine;
     PVOID IrpPtr;
     ULONG UniqMatchId;
 } PERFINFO_DRIVER_COMPLETIONROUTINE, *PPERFINFO_DRIVER_COMPLETIONROUTINE;
-#include "poppack.h"
+#include <poppack.h>
 
 //
 // Power hooks
@@ -4486,7 +4393,7 @@ typedef struct _PERFINFO_YIELD_PROCESSOR_INFORMATION
     ULONG DpcTimeCount;
 } PERFINFO_YIELD_PROCESSOR_INFORMATION, *PPERFINFO_YIELD_PROCESSOR_INFORMATION;
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_INTERRUPT_INFORMATION
 {
     ULONGLONG InitialTime;
@@ -4495,7 +4402,7 @@ typedef struct _PERFINFO_INTERRUPT_INFORMATION
     USHORT Vector;
     UCHAR Reserved;
 } PERFINFO_INTERRUPT_INFORMATION, *PPERFINFO_INTERRUPT_INFORMATION;
-#include "poppack.h"
+#include <poppack.h>
 
 #define PERFINFO_CLOCK_INTERRUPT_CLOCK_OWNER 0x0001
 #define PERFINFO_CLOCK_INTERRUPT_TIMER_PENDING 0x0008
@@ -4512,7 +4419,7 @@ typedef struct _PERFINFO_CLOCK_INTERRUPT_INFORMATION
 //
 // Spinlock
 //
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_SPINLOCK_CONFIG
 {
     ULONG SpinLockSpinThreshold;
@@ -4520,7 +4427,7 @@ typedef struct _PERFINFO_SPINLOCK_CONFIG
     ULONG SpinLockAcquireSampleRate;
     ULONG SpinLockHoldThreshold;
 } PERFINFO_SPINLOCK_CONFIG, *PPERFINFO_SPINLOCK_CONFIG;
-#include "poppack.h"
+#include <poppack.h>
 
 //
 // Stores Executive Resource sampling parameters.
@@ -4568,7 +4475,7 @@ typedef struct _PERFINFO_PAGE_RANGE_IDENTITY
         ULONG_PTR PageFrameIndex;           // Used for DriverLocked/UserPhysical Mdls.
         PVOID VirtualAddress;               // Used otherwise.
     };
-    SIZE_T PageCount;                       // Number of pages.
+    ULONG_PTR PageCount;                    // Number of pages.
 } PERFINFO_PAGE_RANGE_IDENTITY, *PPERFINFO_PAGE_RANGE_IDENTITY;
 
 #define PERFINFO_MM_KERNELMEMORY_USAGE_TYPE_BITS 5
@@ -4586,7 +4493,7 @@ typedef struct _PERFINFO_KERNELMEMORY_RANGE_USAGE
     ULONG UsageType : PERFINFO_MM_KERNELMEMORY_USAGE_TYPE_BITS;
     ULONG Spare: (NTWMI_BITSIZE (ULONG) - PERFINFO_MM_KERNELMEMORY_USAGE_TYPE_BITS);
     PVOID VirtualAddress;               // Starting VA (where meaningful).
-    SIZE_T PageCount;                   // Number of pages.
+    ULONG_PTR PageCount;                // Number of pages.
 } PERFINFO_KERNELMEMORY_RANGE_USAGE, *PPERFINFO_KERNELMEMORY_RANGE_USAGE;
 
 #define PERFINFO_MM_STAT_TYPE_BITS 6
@@ -4947,7 +4854,7 @@ typedef struct _PERFINFO_FILE_PATH_OPERATION
     WCHAR Path[1];
 } PERFINFO_FILE_PATH_OPERATION, *PPERFINFO_FILE_PATH_OPERATION;
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 
 #define PERFINFO_FILE_READ_WRITE_FLAG_MDL   0x1
 
@@ -4999,7 +4906,7 @@ typedef struct _PERFINFO_FLT_OPERATION_STATUS
     NTSTATUS Status;
 } PERFINFO_FLT_OPERATION_STATUS, *PPERFINFO_FLT_OPERATION_STATUS;
 
-#include "poppack.h"
+#include <poppack.h>
 //
 // MemInfo event. This structure should parallel SYSTEM_MEMORY_LIST_INFORMATION.
 //
@@ -5008,29 +4915,29 @@ typedef struct _PERFINFO_FLT_OPERATION_STATUS
 
 typedef struct _PERFINFO_MEMORY_INFORMATION
 {
-    SIZE_T ZeroPageCount;
-    SIZE_T FreePageCount;
-    SIZE_T ModifiedPageCount;
-    SIZE_T ModifiedNoWritePageCount;
-    SIZE_T BadPageCount;
-    SIZE_T PageCountByPriority[PERFINFO_PAGE_PRIORITY_LEVELS];
-    SIZE_T RepurposedPagesByPriority[PERFINFO_PAGE_PRIORITY_LEVELS];
-    SIZE_T ModifiedPageCountPageFile;
+    ULONG_PTR ZeroPageCount;
+    ULONG_PTR FreePageCount;
+    ULONG_PTR ModifiedPageCount;
+    ULONG_PTR ModifiedNoWritePageCount;
+    ULONG_PTR BadPageCount;
+    ULONG_PTR PageCountByPriority[PERFINFO_PAGE_PRIORITY_LEVELS];
+    ULONG_PTR RepurposedPagesByPriority[PERFINFO_PAGE_PRIORITY_LEVELS];
+    ULONG_PTR ModifiedPageCountPageFile;
 } PERFINFO_MEMORY_INFORMATION, *PPERFINFO_MEMORY_INFORMATION;
 
 typedef struct _PERFINFO_SYSTEM_MEMORY_INFORMATION
 {
-    SIZE_T PagedPoolCommitPageCount;
-    SIZE_T NonPagedPoolPageCount;
-    SIZE_T MdlPageCount;
-    SIZE_T CommitPageCount;
+    ULONG_PTR PagedPoolCommitPageCount;
+    ULONG_PTR NonPagedPoolPageCount;
+    ULONG_PTR MdlPageCount;
+    ULONG_PTR CommitPageCount;
 } PERFINFO_SYSTEM_MEMORY_INFORMATION, *PPERFINFO_SYSTEM_MEMORY_INFORMATION;
 
 //
 // Used for MemInfoWS/MemInfoSessionWs event.
 //
 
-#include "pshpack1.h"
+#include <pshpack1.h>
 typedef struct _PERFINFO_WORKINGSET_ENTRY
 {
     union
@@ -5038,18 +4945,18 @@ typedef struct _PERFINFO_WORKINGSET_ENTRY
         ULONG UniqueProcessId;
         ULONG SessionId;
     };
-    SIZE_T WorkingSetPageCount;
-    SIZE_T CommitPageCount;
+    ULONG_PTR WorkingSetPageCount;
+    ULONG_PTR CommitPageCount;
     union
     {
-        SIZE_T PagedPoolPageCount;       // Used for SessionWs.
-        SIZE_T VirtualSizeInPages;       // Used for ProcessWs.
+        ULONG_PTR PagedPoolPageCount;       // Used for SessionWs.
+        ULONG_PTR VirtualSizeInPages;       // Used for ProcessWs.
     };
-    SIZE_T PrivateWorkingSetPageCount;
-    SIZE_T StoreSizeInPages;
-    SIZE_T StoredPageCount;
-    SIZE_T CommitDebtInPages;
-    SIZE_T SharedCommitInPages;
+    ULONG_PTR PrivateWorkingSetPageCount;
+    ULONG_PTR StoreSizeInPages;
+    ULONG_PTR StoredPageCount;
+    ULONG_PTR CommitDebtInPages;
+    ULONG_PTR SharedCommitInPages;
 } PERFINFO_WORKINGSET_ENTRY, *PPERFINFO_WORKINGSET_ENTRY;
 
 typedef struct _PERFINFO_WORKINGSET_INFORMATION
@@ -5057,7 +4964,7 @@ typedef struct _PERFINFO_WORKINGSET_INFORMATION
     ULONG Count;
     PERFINFO_WORKINGSET_ENTRY WsEntry[1];
 } PERFINFO_WORKINGSET_INFORMATION, *PPERFINFO_WORKINGSET_INFORMATION;
-#include "poppack.h"
+#include <poppack.h>
 
 //
 // Contiguous page generation event.
@@ -5778,7 +5685,6 @@ EtwEventWriteString(
     _In_ PCWSTR String
     );
 
-NTSYSAPI
 ULONG
 NTAPI
 EtwEventWriteEx(
@@ -5822,7 +5728,6 @@ EtwWriteUMSecurityEvent(
     _In_opt_ PEVENT_DATA_DESCRIPTOR UserData
     );
 
-NTSYSAPI
 ULONG
 NTAPI
 EtwEventWriteNoRegistration(
@@ -6006,390 +5911,6 @@ EtwCheckCoverage(
     _Inout_ PTELEMETRY_COVERAGE_POINT CoveragePoint
     );
 #endif
-
-//
-// Data consumer apis (deprecated starting with Vista)
-//
-// WMI functionality was moved to ETW.
-//
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiOpenBlock(
-    _In_ LPCGUID Guid,
-    _In_ ACCESS_MASK DesiredAccess,
-    _Out_ PHANDLE DataBlockHandle
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiCloseBlock(
-    _In_ HANDLE DataBlockHandle
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQueryAllDataA(
-    _In_ HANDLE DataBlockHandle,
-    _Inout_ PULONG BufferLength,
-    _Out_writes_bytes_opt_(*BufferLength) PVOID Buffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQueryAllDataW(
-    _In_ HANDLE DataBlockHandle,
-    _Inout_ PULONG BufferLength,
-    _Out_writes_bytes_opt_(*BufferLength) PVOID Buffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQueryAllDataMultipleA(
-    _In_reads_(HandleCount) PHANDLE HandleList,
-    _In_ ULONG HandleCount,
-    _Inout_ PULONG InOutBufferSize,
-    _Out_writes_bytes_(*InOutBufferSize) PVOID OutBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQueryAllDataMultipleW(
-    _In_reads_(HandleCount) PHANDLE HandleList,
-    _In_ ULONG HandleCount,
-    _Inout_ PULONG InOutBufferSize,
-    _Out_writes_bytes_(*InOutBufferSize) PVOID OutBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQuerySingleInstanceA(
-    _In_ HANDLE DataBlockHandle,
-    _In_ PCSTR InstanceName,
-    _Inout_ PULONG BufferSize,
-    _Out_writes_bytes_to_opt_(*BufferSize, *BufferSize) PVOID Buffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQuerySingleInstanceW(
-    _In_ HANDLE DataBlockHandle,
-    _In_ PCWSTR InstanceName,
-    _Inout_ PULONG BufferSize,
-    _Out_writes_bytes_to_opt_(*BufferSize, *BufferSize) PVOID Buffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQuerySingleInstanceMultipleW(
-    _In_reads_(HandleCount) PHANDLE HandleList,
-    _In_reads_(HandleCount) PCWSTR* InstanceNames,
-    _In_ ULONG HandleCount,
-    _Inout_ PULONG InOutBufferSize,
-    _Out_writes_bytes_to_opt_(*InOutBufferSize, *InOutBufferSize) PVOID OutBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQuerySingleInstanceMultipleA(
-    _In_reads_(HandleCount) PHANDLE HandleList,
-    _In_reads_(HandleCount) PCSTR* InstanceNames,
-    _In_ ULONG HandleCount,
-    _Inout_ PULONG InOutBufferSize,
-    _Out_writes_bytes_to_opt_(*InOutBufferSize, *InOutBufferSize) PVOID OutBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiSetSingleInstanceA(
-    _In_ HANDLE DataBlockHandle,
-    _In_ PCSTR InstanceName,
-    _In_ ULONG Reserved,
-    _In_ ULONG ValueBufferSize,
-    _In_reads_bytes_(ValueBufferSize) PVOID ValueBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiSetSingleInstanceW(
-    _In_ HANDLE DataBlockHandle,
-    _In_ PCWSTR InstanceName,
-    _In_ ULONG Reserved,
-    _In_ ULONG ValueBufferSize,
-    _In_reads_bytes_(ValueBufferSize) PVOID ValueBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiSetSingleItemA(
-    _In_ HANDLE DataBlockHandle,
-    _In_ PCSTR InstanceName,
-    _In_ ULONG DataItemId,
-    _In_ ULONG Reserved,
-    _In_ ULONG ValueBufferSize,
-    _In_reads_bytes_(ValueBufferSize) PVOID ValueBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiSetSingleItemW(
-    _In_ HANDLE DataBlockHandle,
-    _In_ PCWSTR InstanceName,
-    _In_ ULONG DataItemId,
-    _In_ ULONG Reserved,
-    _In_ ULONG ValueBufferSize,
-    _In_reads_bytes_(ValueBufferSize) PVOID ValueBuffer
-    );
-
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiExecuteMethodA(
-    _In_ HANDLE MethodDataBlockHandle,
-    _In_ PCSTR MethodInstanceName,
-    _In_ ULONG MethodId,
-    _In_ ULONG InputBufferSize,
-    _In_reads_bytes_opt_(InputBufferSize) PVOID InputBuffer,
-    _Inout_opt_ PULONG OutputBufferSize,
-    _Out_writes_bytes_opt_(*OutputBufferSize) PVOID OutputBuffer
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiExecuteMethodW(
-    _In_ HANDLE MethodDataBlockHandle,
-    _In_ PCWSTR MethodInstanceName,
-    _In_ ULONG MethodId,
-    _In_ ULONG InputBufferSize,
-    _In_reads_bytes_opt_(InputBufferSize) PVOID InputBuffer,
-    _Inout_opt_ PULONG OutputBufferSize,
-    _Out_writes_bytes_opt_(*OutputBufferSize) PVOID OutputBuffer
-    );
-
-// Enable or disable a trace logging guid.
-#define NOTIFICATION_TRACE_FLAG 0x00010000
-// Enable or disable a trace direct callback.
-// The callback is invoked immediately via a seperate thread.
-#define NOTIFICATION_CALLBACK_DIRECT 0x00000004
-// Set this flag (and only this flag) when you want to only check if the 
-// caller has permission to receive events for the guid
-#define NOTIFICATION_CHECK_ACCESS 0x00000008
-// Enable lightweight notification.
-#define NOTIFICATION_LIGHTWEIGHT_FLAG 0x00000020
-
-// Event notification callback function prototype
-_Function_class_(NOTIFICATIONCALLBACK)
-typedef void (WINAPI NOTIFICATIONCALLBACK)(
-    _In_ PWNODE_HEADER Wnode,
-    _In_ ULONG_PTR NotificationContext
-    );
-typedef NOTIFICATIONCALLBACK* PNOTIFICATIONCALLBACK;
-
-// {B48D49A1-E777-11d0-A50C-00A0C9062910}
-DEFINE_GUID(GUID_REGISTRATION_CHANGE_NOTIFICATION,0xb48d49a1, 0xe777, 0x11d0, 0xa5, 0xc, 0x0, 0xa0, 0xc9, 0x6, 0x29, 0x10);
-// {B48D49A2-E777-11d0-A50C-00A0C9062910}
-DEFINE_GUID(GUID_MOF_RESOURCE_ADDED_NOTIFICATION,0xb48d49a2, 0xe777, 0x11d0, 0xa5, 0xc, 0x0, 0xa0, 0xc9, 0x6, 0x29, 0x10);
-// {B48D49A3-E777-11d0-A50C-00A0C9062910}
-DEFINE_GUID(GUID_MOF_RESOURCE_REMOVED_NOTIFICATION,0xb48d49a3, 0xe777, 0x11d0, 0xa5, 0xc, 0x0, 0xa0, 0xc9, 0x6, 0x29, 0x10);
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiNotificationRegistrationA(
-    _In_ PCGUID Guid,
-    _In_ BOOLEAN Enable,
-    _In_ PVOID DeliveryInfo,
-    _In_ ULONG_PTR DeliveryContext,
-    _In_ ULONG Flags
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiNotificationRegistrationW(
-    _In_ PCGUID Guid,
-    _In_ BOOLEAN Enable,
-    _In_ PVOID DeliveryInfo,
-    _In_ ULONG_PTR DeliveryContext,
-    _In_ ULONG Flags
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiEnumerateGuids(
-    _Out_writes_opt_(*GuidCount) PGUID GuidList,
-    _Inout_ PULONG GuidCount
-    );
-
-typedef struct _MOFRESOURCEINFOA
-{
-    PSTR ImagePath;        // Path to image containing MOF resource
-    PSTR ResourceName;     // Name of resource in image
-    ULONG ResourceSize;     // Number of bytes in resource
-    PUCHAR ResourceBuffer;
-} MOFRESOURCEINFOA, *PMOFRESOURCEINFOA;
-
-#ifdef UNICODE
-typedef struct _MOFRESOURCEINFOW MOFRESOURCEINFO, *PMOFRESOURCEINFO;
-#else
-typedef struct _MOFRESOURCEINFOA MOFRESOURCEINFO, *PMOFRESOURCEINFO;
-#endif
-
-//
-// When set the guid can be opened and accessed
-#define MOFCI_RESERVED0  0x00000001
-#define MOFCI_RESERVED1  0x00000002
-#define MOFCI_RESERVED2  0x00000004
-
-typedef struct _MOFRESOURCEINFOW
-{
-    LPWSTR ImagePath;      // Path to image containing MOF resource
-    LPWSTR ResourceName;   // Name of resource in image
-    ULONG ResourceSize;    // Number of bytes in resource
-    PUCHAR ResourceBuffer; // Reserved
-} MOFRESOURCEINFOW, *PMOFRESOURCEINFOW;
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiMofEnumerateResourcesW(
-    _In_ HANDLE MofResourceHandle,
-    _Out_ PULONG MofResourceCount,
-    _Outptr_result_buffer_(*MofResourceCount) PMOFRESOURCEINFOW *MofResourceInfo
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiMofEnumerateResourcesA(
-    _In_ HANDLE MofResourceHandle,
-    _Out_ PULONG MofResourceCount,
-    _Outptr_result_buffer_(*MofResourceCount) PMOFRESOURCEINFOA *MofResourceInfo
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiFileHandleToInstanceNameA(
-    _In_ HANDLE DataBlockHandle,
-    _In_ HANDLE FileHandle,
-    _Inout_ PULONG NumberCharacters,
-    _Out_writes_(*NumberCharacters) CHAR *InstanceNames
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiFileHandleToInstanceNameW(
-    _In_ HANDLE DataBlockHandle,
-    _In_ HANDLE FileHandle,
-    _Inout_ PULONG NumberCharacters,
-    _Out_writes_(*NumberCharacters) WCHAR *InstanceNames
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiDevInstToInstanceNameA(
-    _Out_writes_opt_(InstanceNameLength) PSTR InstanceName,
-    _In_ ULONG InstanceNameLength,
-    _In_ PCSTR DevInst,
-    _In_ ULONG InstanceIndex
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiDevInstToInstanceNameW(
-    _Out_writes_opt_(InstanceNameLength) PWSTR InstanceName,
-    _In_ ULONG InstanceNameLength,
-    _In_ PCWSTR DevInst,
-    _In_ ULONG InstanceIndex
-    );
-
-typedef struct _WMIGUIDINFORMATION
-{
-    ULONG Size;
-    BOOLEAN IsExpensive;
-    BOOLEAN IsEventOnly;
-} WMIGUIDINFORMATION, *PWMIGUIDINFORMATION;
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiQueryGuidInformation(
-    _In_ HANDLE GuidHandle,
-    _Out_ PWMIGUIDINFORMATION GuidInfo
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiReceiveNotificationsW(
-    _In_ ULONG HandleCount,
-    _In_reads_(HandleCount) PHANDLE HandleList,
-    _In_ NOTIFICATIONCALLBACK Callback,
-    _In_ ULONG_PTR DeliveryContext
-    );
-
-NTSYSAPI
-ULONG
-NTAPI
-WmiReceiveNotificationsA(
-    _In_ ULONG HandleCount,
-    _In_reads_(HandleCount) PHANDLE HandleList,
-    _In_ NOTIFICATIONCALLBACK Callback,
-    _In_ ULONG_PTR DeliveryContext
-    );
-
-#ifdef UNICODE
-#define WmiQuerySingleInstanceMultiple WmiQuerySingleInstanceMultipleW
-#define WmiSetSingleInstance WmiSetSingleInstanceW
-#define WmiSetSingleItem WmiSetSingleItemW
-#define WmiNotificationRegistration WmiNotificationRegistrationW
-#define WmiMofEnumerateResources WmiMofEnumerateResourcesW
-#define WmiExecuteMethod WmiExecuteMethodW
-#define WmiFileHandleToInstanceName WmiFileHandleToInstanceNameW
-#define WmiDevInstToInstanceName WmiDevInstToInstanceNameW
-#define WmiReceiveNotifications WmiReceiveNotificationsW
-#else
-#define WmiQuerySingleInstanceMultiple WmiQuerySingleInstanceMultipleA
-#define WmiSetSingleInstance WmiSetSingleInstanceA
-#define WmiSetSingleItem WmiSetSingleItemA
-#define WmiNotificationRegistration WmiNotificationRegistrationA
-#define WmiMofEnumerateResources WmiMofEnumerateResourcesA
-#define WmiExecuteMethod WmiExecuteMethodA
-#define WmiFileHandleToInstanceName WmiFileHandleToInstanceNameA
-#define WmiDevInstToInstanceName WmiDevInstToInstanceNameA
-#define WmiReceiveNotifications WmiReceiveNotificationsA
-#endif
-
-#define WmiInsertTimestamp(WnodeHeader) \
-    GetSystemTimeAsFileTime((PFILETIME)&((PWNODE_HEADER)(WnodeHeader))->TimeStamp)
-
-NTSYSAPI
-VOID
-NTAPI
-WmiFreeBuffer(
-    _In_ PVOID Buffer
-    );
 
 EXTERN_C_END
 

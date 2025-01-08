@@ -7,8 +7,6 @@
 #ifndef _NTPNPAPI_H
 #define _NTPNPAPI_H
 
-#include "cfg.h"
-
 typedef enum _PLUGPLAY_EVENT_CATEGORY
 {
     HardwareProfileChangeEvent,

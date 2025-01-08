@@ -223,7 +223,7 @@ typedef enum _DOMAIN_SERVER_ROLE
     DomainServerRolePrimary
 } DOMAIN_SERVER_ROLE, *PDOMAIN_SERVER_ROLE;
 
-#include "pshpack4.h"
+#include <pshpack4.h>
 typedef struct _DOMAIN_GENERAL_INFORMATION
 {
     LARGE_INTEGER ForceLogoff;
@@ -238,9 +238,9 @@ typedef struct _DOMAIN_GENERAL_INFORMATION
     ULONG GroupCount;
     ULONG AliasCount;
 } DOMAIN_GENERAL_INFORMATION, *PDOMAIN_GENERAL_INFORMATION;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack4.h"
+#include <pshpack4.h>
 typedef struct _DOMAIN_GENERAL_INFORMATION2
 {
     DOMAIN_GENERAL_INFORMATION I1;
@@ -248,7 +248,7 @@ typedef struct _DOMAIN_GENERAL_INFORMATION2
     LARGE_INTEGER LockoutObservationWindow; // delta time
     USHORT LockoutThreshold;
 } DOMAIN_GENERAL_INFORMATION2, *PDOMAIN_GENERAL_INFORMATION2;
-#include "poppack.h"
+#include <poppack.h>
 
 typedef struct _DOMAIN_UAS_INFORMATION
 {
@@ -1040,7 +1040,7 @@ typedef struct _USER_PREFERENCES_INFORMATION
     USHORT CodePage;
 } USER_PREFERENCES_INFORMATION, *PUSER_PREFERENCES_INFORMATION;
 
-#include "pshpack4.h"
+#include <pshpack4.h>
 typedef struct _USER_LOGON_INFORMATION
 {
     UNICODE_STRING UserName;
@@ -1062,14 +1062,14 @@ typedef struct _USER_LOGON_INFORMATION
     USHORT LogonCount;
     ULONG UserAccountControl;
 } USER_LOGON_INFORMATION, *PUSER_LOGON_INFORMATION;
-#include "poppack.h"
+#include <poppack.h>
 
 typedef struct _USER_LOGON_HOURS_INFORMATION
 {
     LOGON_HOURS LogonHours;
 } USER_LOGON_HOURS_INFORMATION, *PUSER_LOGON_HOURS_INFORMATION;
 
-#include "pshpack4.h"
+#include <pshpack4.h>
 typedef struct _USER_ACCOUNT_INFORMATION
 {
     UNICODE_STRING UserName;
@@ -1091,7 +1091,7 @@ typedef struct _USER_ACCOUNT_INFORMATION
     LARGE_INTEGER AccountExpires;
     ULONG UserAccountControl;
 } USER_ACCOUNT_INFORMATION, *PUSER_ACCOUNT_INFORMATION;
-#include "poppack.h"
+#include <poppack.h>
 
 typedef struct _USER_NAME_INFORMATION
 {
@@ -1336,7 +1336,7 @@ typedef struct _USER_PARAMETERS_INFORMATION
     USER_ALL_PASSWORDMUSTCHANGE | \
     USER_ALL_UNDEFINED_MASK)
 
-#include "pshpack4.h"
+#include <pshpack4.h>
 typedef struct _USER_ALL_INFORMATION
 {
     LARGE_INTEGER LastLogon;
@@ -1373,15 +1373,15 @@ typedef struct _USER_ALL_INFORMATION
     BOOLEAN PasswordExpired;
     BOOLEAN PrivateDataSensitive;
 } USER_ALL_INFORMATION, *PUSER_ALL_INFORMATION;
-#include "poppack.h"
+#include <poppack.h>
 
-#include "pshpack4.h"
+#include <pshpack4.h>
 typedef struct _USER_INTERNAL3_INFORMATION
 {
     USER_ALL_INFORMATION I1;
     LARGE_INTEGER LastBadPasswordTime;
 } USER_INTERNAL3_INFORMATION, *PUSER_INTERNAL3_INFORMATION;
-#include "poppack.h"
+#include <poppack.h>
 
 typedef struct _ENCRYPTED_USER_PASSWORD
 {
