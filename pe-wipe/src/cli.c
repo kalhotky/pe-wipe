@@ -12,50 +12,31 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
         /*
         * TODO:
         *   -o          Create output file.
-        *   -fstub      Wipe DOS stub.
+        *   -dos        Wipe DOS header.
+        *   -stub       Wipe DOS stub.
         */
-
-        /* F stands for filter(s) */
 
         U_Msg("PE Wipe %lu.%lu.%lu (%s) by %s\n\n", PEWIPE_MAJOR, PEWIPE_MINOR, PEWIPE_PATCH, PEWIPE_ARCH, PEWIPE_AUTHOR);
         U_Msg(
             "Usage: pe-wipe <filename> [options]\n"
             "Options:\n"
             "   -v              Display verbose processing information.\n"
-
-            "   -frich          Wipe Rich header.\n"
-
-            "   -fcoff          Wipe COFF header.\n"
-            "   -fcoff-ts       Wipe COFF header timestamp only.\n"
-
-            "   -fopt           Wipe Optional header.\n"
-            "   -fopt-lv        Wipe Optional header linker version only.\n"
-            "   -fopt-v         Wipe Optional header version only.\n"
-
-            "   -fsec           Wipe Section headers.\n"
-            "   -fsec-n         Wipe Section headers names only.\n"
-            "   -fsec-f         Wipe Section headers unused flags only.\n"
-
-            "   -fexp           Wipe Export directory.\n"
-            "   -fexp-ts        Wipe Export directory timestamp only.\n"
-            "   -fexp-v         Wipe Export directory version only.\n"
-
-            "   -fres           Wipe Resource directory.\n"
-            "   -fres-ts        Wipe Resource directory timestamp only.\n"
-            "   -fres-v         Wipe Resource directory version only.\n"
-
-            "   -fdbg           Wipe Debug directory.\n"
-            "   -fdbg-ts        Wipe Debug directory timestamp only.\n"
-            "   -fdbg-v         Wipe Debug directory version only.\n"
-
-            "   -fcfg           Wipe LoadConfig directory.\n"
-            "   -fcfg-ts        Wipe LoadConfig directory timestamp only.\n"
-            "   -fcfg-v         Wipe LoadConfig directory version only.\n"
-
-            "   -fts            Wipe all timestamp fields only.\n"
-            "   -fv             Wipe all version fields only.\n"
-
             "   -cs             Generate PE checksum.\n"
+            "\n"
+            "   -rich           Wipe Rich header.\n"
+            "   -coff           Wipe COFF header.\n"
+            "   -opt            Wipe Optional header.\n"
+            "   -sec            Wipe Section header(s).\n"
+            "   -exp            Wipe Export directory.\n"
+            "   -res            Wipe Resource directory.\n"
+            "   -dbg            Wipe Debug directory.\n"
+            "   -cfg            Wipe LoadConfig directory.\n"
+            "\n"
+            "   -fopt-lv        Keep Optional header linker version.\n"
+            "   -fsec-n         Keep Section header(s) name(s).\n"
+            "   -fsec-f         Keep Section header(s) descriptive flags.\n"
+            "   -fts            Keep all timestamp fields.\n"
+            "   -fv             Keep all version fields.\n"
         );
 
         return CLI_STATUS_SUCCESS;
@@ -69,33 +50,41 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
         {
             pContext->Verbose = TRUE;
         }
-        else if (CLI_OPTION("-frich"))
+        else if (CLI_OPTION("-cs"))
         {
-            pContext->FRichHeader = TRUE;
+            pContext->CheckSum = TRUE;
         }
-        else if (CLI_OPTION("-fcoff"))
+        else if (CLI_OPTION("-coff"))
         {
-            pContext->FCOFFHeader = TRUE;
+            pContext->COFFHeader = TRUE;
         }
-        else if (CLI_OPTION("-fcoff-ts"))
+        else if (CLI_OPTION("-opt"))
         {
-            pContext->FCOFFHeaderTimeStamp = TRUE;
+            pContext->OptionalHeader = TRUE;
         }
-        else if (CLI_OPTION("-fopt"))
+        else if (CLI_OPTION("-sec"))
         {
-            pContext->FOptionalHeader = TRUE;
+            pContext->SectionHeaders = TRUE;
+        }
+        else if (CLI_OPTION("-exp"))
+        {
+            pContext->ExportDirectory = TRUE;
+        }
+        else if (CLI_OPTION("-res"))
+        {
+            pContext->ResourceDirectory = TRUE;
+        }
+        else if (CLI_OPTION("-dbg"))
+        {
+            pContext->DebugDirectory = TRUE;
+        }
+        else if (CLI_OPTION("-cfg"))
+        {
+            pContext->LoadConfigDirectory = TRUE;
         }
         else if (CLI_OPTION("-fopt-lv"))
         {
             pContext->FOptionalHeaderLinkerVersion = TRUE;
-        }
-        else if (CLI_OPTION("-fopt-v"))
-        {
-            pContext->FOptionalHeaderVersion = TRUE;
-        }
-        else if (CLI_OPTION("-fsec"))
-        {
-            pContext->FSectionHeaders = TRUE;
         }
         else if (CLI_OPTION("-fsec-n"))
         {
@@ -105,73 +94,13 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
         {
             pContext->FSectionHeadersFlags = TRUE;
         }
-        else if (CLI_OPTION("-fexp"))
-        {
-            pContext->FExportDirectory = TRUE;
-        }
-        else if (CLI_OPTION("-fexp-ts"))
-        {
-            pContext->FExportDirectoryTimeStamp = TRUE;
-        }
-        else if (CLI_OPTION("-fexp-v"))
-        {
-            pContext->FExportDirectoryVersion = TRUE;
-        }
-        else if (CLI_OPTION("-fres"))
-        {
-            pContext->FResourceDirectory = TRUE;
-        }
-        else if (CLI_OPTION("-fres-ts"))
-        {
-            pContext->FResourceDirectoryTimeStamp = TRUE;
-        }
-        else if (CLI_OPTION("-fres-v"))
-        {
-            pContext->FResourceDirectoryVersion = TRUE;
-        }
-        else if (CLI_OPTION("-fdbg"))
-        {
-            pContext->FDebugDirectory = TRUE;
-        }
-        else if (CLI_OPTION("-fdbg-ts"))
-        {
-            pContext->FDebugDirectoryTimeStamp = TRUE;
-        }
-        else if (CLI_OPTION("-fdbg-v"))
-        {
-            pContext->FDebugDirectoryVersion = TRUE;
-        }
-        else if (CLI_OPTION("-fcfg"))
-        {
-            pContext->FLoadConfigDirectory = TRUE;
-        }
-        else if (CLI_OPTION("-fcfg-ts"))
-        {
-            pContext->FLoadConfigDirectoryTimeStamp = TRUE;
-        }
-        else if (CLI_OPTION("-fcfg-v"))
-        {
-            pContext->FLoadConfigDirectoryVersion = TRUE;
-        }
         else if (CLI_OPTION("-fts"))
         {
-            pContext->FCOFFHeaderTimeStamp = TRUE;
-            pContext->FExportDirectoryTimeStamp = TRUE;
-            pContext->FResourceDirectoryTimeStamp = TRUE;
-            pContext->FDebugDirectoryTimeStamp = TRUE;
-            pContext->FLoadConfigDirectoryTimeStamp = TRUE;
+            pContext->FTimeStamp = TRUE;
         }
         else if (CLI_OPTION("-fv"))
         {
-            pContext->FOptionalHeaderVersion = TRUE;
-            pContext->FExportDirectoryVersion = TRUE;
-            pContext->FResourceDirectoryVersion = TRUE;
-            pContext->FDebugDirectoryVersion = TRUE;
-            pContext->FLoadConfigDirectoryVersion = TRUE;
-        }
-        else if (CLI_OPTION("-cs"))
-        {
-            pContext->CheckSum = TRUE;
+            pContext->FVersion = TRUE;
         }
         else if (!pContext->pFileName)
         {
@@ -187,13 +116,13 @@ INT CLI_ProcessCmdLine(TPEContext* pContext, INT argc, WCHAR** argv)
         return CLI_STATUS_FAILURE;
     }
 
-    if (!pContext->Filters)
+    if (!pContext->Options)
     {
-        pContext->Filters = 0xFFFFFFFF;
+        pContext->Options = 0xFFFFFFFF;
 
         if (pContext->Verbose)
         {
-            U_Msg("[>] Enabled all filters\n");
+            U_Msg("[>] Enabled all options\n");
         }
     }
 

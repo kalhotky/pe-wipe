@@ -56,11 +56,6 @@ NTSTATUS PE_MapView(TPEContext* pContext)
         return Status;
     }
 
-    if (pContext->Verbose)
-    {
-        U_Msg("[>] File size: 0x%llX\n", FileInfo.EndOfFile.QuadPart);
-    }
-
     if (FileInfo.EndOfFile.HighPart > 0)
     {
         NtClose(FileHandle);

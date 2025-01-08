@@ -16,7 +16,7 @@ typedef struct SPEContext
 
     union
     {
-        ULONG Options;
+        ULONG Misc;
         struct
         {
             BOOLEAN Verbose : 1;
@@ -26,37 +26,30 @@ typedef struct SPEContext
 
     union
     {
+        ULONG Options;
+        struct
+        {
+            BOOLEAN RichHeader : 1;
+            BOOLEAN COFFHeader : 1;
+            BOOLEAN OptionalHeader : 1;
+            BOOLEAN SectionHeaders : 1;
+            BOOLEAN ExportDirectory : 1;
+            BOOLEAN ResourceDirectory : 1;
+            BOOLEAN DebugDirectory : 1;
+            BOOLEAN LoadConfigDirectory : 1;
+        };
+    };
+
+    union
+    {
         ULONG Filters;
         struct
         {
-            BOOLEAN FRichHeader : 1;
-
-            BOOLEAN FCOFFHeader : 1;
-            BOOLEAN FCOFFHeaderTimeStamp : 1;
-
-            BOOLEAN FOptionalHeader : 1;
             BOOLEAN FOptionalHeaderLinkerVersion : 1;
-            BOOLEAN FOptionalHeaderVersion : 1;
-
-            BOOLEAN FSectionHeaders : 1;
             BOOLEAN FSectionHeadersNames : 1;
             BOOLEAN FSectionHeadersFlags : 1;
-
-            BOOLEAN FExportDirectory : 1;
-            BOOLEAN FExportDirectoryTimeStamp : 1;
-            BOOLEAN FExportDirectoryVersion : 1;
-
-            BOOLEAN FResourceDirectory : 1;
-            BOOLEAN FResourceDirectoryTimeStamp : 1;
-            BOOLEAN FResourceDirectoryVersion : 1;
-
-            BOOLEAN FDebugDirectory : 1;
-            BOOLEAN FDebugDirectoryTimeStamp : 1;
-            BOOLEAN FDebugDirectoryVersion : 1;
-
-            BOOLEAN FLoadConfigDirectory : 1;
-            BOOLEAN FLoadConfigDirectoryTimeStamp : 1;
-            BOOLEAN FLoadConfigDirectoryVersion : 1;
+            BOOLEAN FTimeStamp : 1;
+            BOOLEAN FVersion : 1;
         };
     };
 } TPEContext;

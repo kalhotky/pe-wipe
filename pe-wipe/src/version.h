@@ -1,6 +1,6 @@
 #pragma once
 #define PEWIPE_MAJOR    0UL
-#define PEWIPE_MINOR    4UL
+#define PEWIPE_MINOR    5UL
 #define PEWIPE_PATCH    0UL
 
 #define PEWIPE_AUTHOR   "https://github.com/kalhotky"
